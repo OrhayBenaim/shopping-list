@@ -1,12 +1,11 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Feather } from "@expo/vector-icons";
 
 import { HomeScreen } from "../screens/HomeScreen";
 import type { RootStackParamList, AuthParamList } from "../types";
 import { HomeStackScreen } from "../types";
-import { HeaderMenu } from "../components/Header/HeaderMenu";
+import { Header } from "../components/Header";
 
 import { LinkingConfiguration } from "./LinkingConfiguration";
 
@@ -45,10 +44,9 @@ function AuthStackNavigator() {
         name={HomeStackScreen.HomeScreen}
         component={HomeScreen}
         options={{
-          title: "Home",
-          headerTitleAlign: "center",
-          headerRight: () => <Feather name="search" size={24} color="black" />,
-          headerLeft: () => <HeaderMenu />,
+          header: () => (
+            <Header leftIcon="menu" title="Home" rightIcon="search" />
+          ),
         }}
       />
     </HomeNavigation.Navigator>
