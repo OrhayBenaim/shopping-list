@@ -1,10 +1,12 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Feather } from "@expo/vector-icons";
 
 import { HomeScreen } from "../screens/HomeScreen";
 import type { RootStackParamList, AuthParamList } from "../types";
 import { HomeStackScreen } from "../types";
+import { HeaderMenu } from "../components/Header/HeaderMenu";
 
 import { LinkingConfiguration } from "./LinkingConfiguration";
 
@@ -27,7 +29,7 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         name="Root"
-        component={BottomTabNavigator}
+        component={AuthStackNavigator}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -36,12 +38,18 @@ function RootNavigator() {
 
 const HomeNavigation = createNativeStackNavigator<AuthParamList>();
 
-function BottomTabNavigator() {
+function AuthStackNavigator() {
   return (
     <HomeNavigation.Navigator initialRouteName={HomeStackScreen.HomeScreen}>
       <HomeNavigation.Screen
         name={HomeStackScreen.HomeScreen}
         component={HomeScreen}
+        options={{
+          title: "Home",
+          headerTitleAlign: "center",
+          headerRight: () => <Feather name="search" size={24} color="black" />,
+          headerLeft: () => <HeaderMenu />,
+        }}
       />
     </HomeNavigation.Navigator>
   );
