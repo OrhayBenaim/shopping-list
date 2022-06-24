@@ -8,27 +8,17 @@ import type { LinkingOptions } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 
 import type { RootStackParamList } from "../types";
+import { HomeStackScreen } from "../types";
 
 export const LinkingConfiguration: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.makeUrl("/")],
+  prefixes: [Linking.createURL("/")],
   config: {
     screens: {
       Root: {
         screens: {
-          TabOne: {
-            screens: {
-              TabOneScreen: "one",
-            },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: "two",
-            },
-          },
+          [HomeStackScreen.HomeScreen]: HomeStackScreen.HomeScreen,
         },
       },
-      Modal: "modal",
-      NotFound: "*",
     },
   },
 };
