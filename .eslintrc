@@ -18,6 +18,12 @@
       "error",
       120
     ],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto",
+      }
+    ],
     "@typescript-eslint/no-namespace": ["error", { "allowDeclarations": true }],
     "react/no-unstable-nested-components": [ "error",
       { "allowAsProps": true }
