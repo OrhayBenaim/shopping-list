@@ -3,10 +3,8 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
-import type {
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from "@react-navigation/native";
+import type { Feather } from "@expo/vector-icons";
+import type { NavigatorScreenParams } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 export type RootStackParamList = {
@@ -28,3 +26,5 @@ export type AuthParamList = {
 
 export type HomeStackScreenProps<Screen extends keyof AuthParamList> =
   NativeStackScreenProps<AuthParamList, Screen>;
+
+export type IconName = keyof typeof Feather.glyphMap;
