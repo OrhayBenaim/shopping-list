@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+import { Categories } from "../components/CategoriesList/Categories";
 import { Text, View } from "../components/Themed";
 import type { HomeStackScreen, HomeStackScreenProps } from "../types";
 
@@ -7,18 +8,14 @@ export function HomeScreen({
   navigation,
 }: HomeStackScreenProps<HomeStackScreen.HomeScreen>) {
   return (
-    <View style={styles.container}>
+    <View>
+      <Categories title="All Categories" type="tags" />
       <Text style={styles.title}>Home</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   title: {
     fontSize: 20,
     fontWeight: "bold",

@@ -28,3 +28,9 @@ export type HomeStackScreenProps<Screen extends keyof AuthParamList> =
   NativeStackScreenProps<AuthParamList, Screen>;
 
 export type IconName = keyof typeof Feather.glyphMap;
+
+export interface CategoryType {
+  id: number;
+  name: string;
+  icon?: IconName;
+}
