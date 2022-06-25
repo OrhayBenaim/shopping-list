@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet } from "react-native";
 import Animated, {
   Easing,
-  interpolateColor,
+  interpolate,
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
@@ -9,7 +9,7 @@ import Animated, {
 
 import { Font, Layout } from "../../constants/Layout";
 import type { CategoryType } from "../../types";
-import { useThemeColor } from "../Themed";
+import { useThemeColor, View } from "../Themed";
 
 import type { CategoriesProps } from "./Categories";
 
@@ -20,22 +20,6 @@ interface CategoryProps {
   onSelect: (category: CategoryType) => void;
 }
 
-const categoryStyle = StyleSheet.create({
-  tag: {
-    borderRadius: Font.m,
-    borderBottomStartRadius: 0,
-    paddingVertical: Font.s / 2,
-    justifyContent: "center",
-    alignItems: "center",
-    width: 110,
-    margin: Layout.s,
-    elevation: 10,
-  },
-  nameTag: {
-    fontSize: Font.m,
-  },
-});
-
 export const Category = ({
   type,
   category,
@@ -45,11 +29,38 @@ export const Category = ({
   return type === "tags" ? <Tag {...{ category, selected, onSelect }} /> : null;
 };
 
+const WIDTH = 110;
+const tagStyles = StyleSheet.create({
+  container: {
+    borderRadius: Font.m,
+    borderBottomStartRadius: 0,
+    paddingVertical: Font.s / 2,
+    justifyContent: "center",
+    alignItems: "center",
+    width: WIDTH,
+    margin: Layout.s,
+    elevation: 10,
+    position: "relative",
+  },
+  containerBg: {
+    borderRadius: Font.m,
+    borderBottomStartRadius: 0,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  name: {
+    fontSize: Font.m,
+  },
+});
 const Tag = ({ onSelect, category, selected }: Omit<CategoryProps, "type">) => {
   const primaryColor = useThemeColor({}, "primary");
   const textLight = useThemeColor({}, "textLight");
 
-  const bgColor = useThemeColor({}, "background");
   const textColor = useThemeColor({}, "text");
 
   const active = useDerivedValue(
@@ -60,31 +71,49 @@ const Tag = ({ onSelect, category, selected }: Omit<CategoryProps, "type">) => {
     [selected]
   );
 
+  const activeTextStyles = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(active.value),
+    }),
+    [active]
+  );
+
   const textStyles = useAnimatedStyle(
     () => ({
-      color: interpolateColor(active.value, [1, 0], [textLight, textColor]),
+      opacity: withTiming(interpolate(active.value, [1, 0], [0, 1])),
     }),
     [active]
   );
 
   const bgStyles = useAnimatedStyle(
     () => ({
-      backgroundColor: interpolateColor(
-        active.value,
-        [1, 0],
-        [primaryColor, bgColor]
-      ),
+      transform: [{ scale: withTiming(active.value, { duration: 75 }) }],
     }),
     [active]
   );
 
   return (
     <Pressable onPress={() => onSelect(category)}>
-      <Animated.View style={[categoryStyle.tag, bgStyles]}>
-        <Animated.Text style={[categoryStyle.nameTag, textStyles]}>
+      <View style={[tagStyles.container]}>
+        <Animated.View
+          style={[
+            tagStyles.containerBg,
+            { backgroundColor: primaryColor },
+            bgStyles,
+          ]}
+        >
+          <Animated.Text
+            style={[tagStyles.name, activeTextStyles, { color: textLight }]}
+          >
+            {category.name}
+          </Animated.Text>
+        </Animated.View>
+        <Animated.Text
+          style={[tagStyles.name, textStyles, { color: textColor }]}
+        >
           {category.name}
         </Animated.Text>
-      </Animated.View>
+      </View>
     </Pressable>
   );
 };
