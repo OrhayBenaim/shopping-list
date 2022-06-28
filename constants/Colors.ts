@@ -2,8 +2,10 @@ export const Colors = {
   light: {
     text: "#000",
     primary: "#45C163",
-    background: "#fff",
+    background: "#F2F2F2",
+    viewColor: "#fff",
     textLight: "#fff",
+    lightAccent: "#C2C2C2",
   },
   dark: {
     text: "#fff",
