@@ -15,7 +15,6 @@ export interface CategoriesProps {
 const categoriesStyle = StyleSheet.create({
   title: {
     fontSize: Font.xl,
-    fontWeight: "bold",
   },
   categoriesContainer: {
     alignSelf: "flex-start",
