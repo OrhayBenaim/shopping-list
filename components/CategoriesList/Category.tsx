@@ -1,7 +1,8 @@
+import { Feather } from "@expo/vector-icons";
+import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import Animated, {
+import {
   Easing,
-  interpolate,
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
@@ -9,10 +10,19 @@ import Animated, {
 
 import { Font, Layout } from "../../constants/Layout";
 import type { CategoryType } from "../../types";
-import { useThemeColor, View } from "../Themed";
+import { Card } from "../Card";
+import {
+  AnimatedText,
+  AnimatedView,
+  BackgroundColor,
+  Text,
+  useThemeColor,
+  View,
+} from "../Themed";
 
 import type { CategoriesProps } from "./Categories";
 
+const SPACING = Layout.s;
 interface CategoryProps {
   category: CategoryType;
   type: CategoriesProps["type"];
@@ -20,16 +30,19 @@ interface CategoryProps {
   onSelect: (category: CategoryType) => void;
 }
 
-export const Category = ({
-  type,
-  category,
-  selected,
-  onSelect,
-}: CategoryProps) => {
-  return type === "tags" ? <Tag {...{ category, selected, onSelect }} /> : null;
-};
+const Category = React.memo(
+  ({ type, category, selected, onSelect }: CategoryProps) => {
+    return type === "tags" ? (
+      <Tag {...{ category, selected, onSelect }} />
+    ) : (
+      <ShadowCard {...{ category, selected, onSelect }} />
+    );
+  }
+);
 
-const WIDTH = 110;
+export { Category };
+
+const TAG_WIDTH = 110;
 const tagStyles = StyleSheet.create({
   container: {
     borderRadius: Font.m,
@@ -37,9 +50,8 @@ const tagStyles = StyleSheet.create({
     paddingVertical: Font.s / 2,
     justifyContent: "center",
     alignItems: "center",
-    width: WIDTH,
-    margin: Layout.s,
-    elevation: 10,
+    width: TAG_WIDTH,
+    margin: SPACING,
     position: "relative",
   },
   containerBg: {
@@ -71,49 +83,66 @@ const Tag = ({ onSelect, category, selected }: Omit<CategoryProps, "type">) => {
     [selected]
   );
 
-  const activeTextStyles = useAnimatedStyle(
+  const scaleAniamtion = useAnimatedStyle(
     () => ({
-      opacity: withTiming(active.value),
-    }),
-    [active]
-  );
-
-  const textStyles = useAnimatedStyle(
-    () => ({
-      opacity: withTiming(interpolate(active.value, [1, 0], [0, 1])),
-    }),
-    [active]
-  );
-
-  const bgStyles = useAnimatedStyle(
-    () => ({
-      transform: [{ scale: withTiming(active.value, { duration: 75 }) }],
+      transform: [{ scale: active.value }],
     }),
     [active]
   );
 
   return (
     <Pressable onPress={() => onSelect(category)}>
-      <View style={[tagStyles.container]}>
-        <Animated.View
+      <View style={tagStyles.container}>
+        <Text style={[tagStyles.name, { color: textColor }]}>
+          {category.name}
+        </Text>
+
+        <AnimatedView
           style={[
             tagStyles.containerBg,
             { backgroundColor: primaryColor },
-            bgStyles,
+            scaleAniamtion,
           ]}
         >
-          <Animated.Text
-            style={[tagStyles.name, activeTextStyles, { color: textLight }]}
-          >
+          <AnimatedText style={[tagStyles.name, { color: textLight }]}>
             {category.name}
-          </Animated.Text>
-        </Animated.View>
-        <Animated.Text
-          style={[tagStyles.name, textStyles, { color: textColor }]}
-        >
-          {category.name}
-        </Animated.Text>
+          </AnimatedText>
+        </AnimatedView>
       </View>
+    </Pressable>
+  );
+};
+
+const CARD_WIDTH = 110;
+const cardStyles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    margin: SPACING,
+  },
+  card: {
+    elevation: 5,
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    width: CARD_WIDTH,
+    height: CARD_WIDTH,
+    marginBottom: SPACING / 2,
+  },
+});
+const ShadowCard = ({ onSelect, category }: Omit<CategoryProps, "type">) => {
+  const lightAccent = useThemeColor({}, "lightAccent");
+
+  return (
+    <Pressable onPress={() => onSelect(category)}>
+      <BackgroundColor style={cardStyles.container}>
+        <Card style={cardStyles.card}>
+          {category.icon ? (
+            <Feather name={category.icon} size={24} color={lightAccent} />
+          ) : null}
+        </Card>
+        <Text>{category.name}</Text>
+      </BackgroundColor>
     </Pressable>
   );
 };
