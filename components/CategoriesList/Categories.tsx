@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet } from "react-native";
 
 import { Font, Layout } from "../../constants/Layout";
 import type { CategoryType } from "../../types";
-import { Text, View } from "../Themed";
+import { BackgroundColor, Text, View } from "../Themed";
 
 import { Category } from "./Category";
 
@@ -38,10 +38,9 @@ export const Categories = ({ title, type }: CategoriesProps) => {
   };
 
   return (
-    <View>
-      <View>
-        <Text style={categoriesStyle.title}>{title}</Text>
-      </View>
+    <BackgroundColor>
+      <Text style={categoriesStyle.title}>{title}</Text>
+
       <ScrollView
         decelerationRate="fast"
         horizontal
@@ -56,6 +55,6 @@ export const Categories = ({ title, type }: CategoriesProps) => {
           />
         ))}
       </ScrollView>
-    </View>
+    </BackgroundColor>
   );
 };
