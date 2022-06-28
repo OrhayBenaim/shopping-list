@@ -1,17 +1,21 @@
 import { StyleSheet } from "react-native";
 
+import { Card } from "../components/Card";
 import { Categories } from "../components/CategoriesList/Categories";
-import { Text, View } from "../components/Themed";
+import { BackgroundColor, Text } from "../components/Themed";
 import type { HomeStackScreen, HomeStackScreenProps } from "../types";
 
 export function HomeScreen({
   navigation,
 }: HomeStackScreenProps<HomeStackScreen.HomeScreen>) {
   return (
-    <View>
-      <Categories title="All Categories" type="tags" />
+    <BackgroundColor>
+      <Categories title="All Categories" type="normal" />
       <Text style={styles.title}>Home</Text>
-    </View>
+      <Card>
+        <Text>Card</Text>
+      </Card>
+    </BackgroundColor>
   );
 }
 
