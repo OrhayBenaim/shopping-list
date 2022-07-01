@@ -18,10 +18,14 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 
 export enum HomeStackScreen {
   HomeScreen = "HomeScreen",
+  Product = "Product",
 }
 
 export type AuthParamList = {
   [HomeStackScreen.HomeScreen]: undefined;
+  [HomeStackScreen.Product]: {
+    product: ProductType;
+  };
 };
 
 export type HomeStackScreenProps<Screen extends keyof AuthParamList> =
@@ -33,4 +37,18 @@ export interface CategoryType {
   id: number;
   name: string;
   icon?: IconName;
+}
+
+export enum Units {
+  Gram,
+  Kg,
+  Piece,
+}
+
+export interface ProductType {
+  id: number;
+  name: string;
+  category: CategoryType;
+  image: string;
+  unit: Units;
 }
