@@ -24,9 +24,16 @@ interface HeaderProps {
   title: string;
   leftIcon?: IconName;
   rightIcon?: IconName;
+  onLeftIconPress?: () => void;
+  onRightIconPress?: () => void;
 }
 
-export function Header({ title, leftIcon, rightIcon }: HeaderProps) {
+export function Header({
+  title,
+  leftIcon,
+  rightIcon,
+  onLeftIconPress,
+}: HeaderProps) {
   const insets = useSafeAreaInsets();
   const primaryColor = useThemeColor({}, "primary");
   const textLight = useThemeColor({}, "textLight");
@@ -42,7 +49,7 @@ export function Header({ title, leftIcon, rightIcon }: HeaderProps) {
       ]}
     >
       {leftIcon && (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onLeftIconPress}>
           <Feather name={leftIcon} size={24} color={textLight} />
         </TouchableOpacity>
       )}
