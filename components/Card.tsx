@@ -2,14 +2,19 @@ import React, { useMemo } from "react";
 import type { ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 
-import { AnimatedView } from "./Themed";
+import { View, BackgroundColor } from "./Themed";
 
 interface CardType {
   children: React.ReactNode;
+  renderDescription?: () => React.ReactNode;
   style?: ViewStyle;
 }
 
-export const Card = ({ children, style: _style }: CardType) => {
+export const Card = ({
+  renderDescription,
+  children,
+  style: _style,
+}: CardType) => {
   const calcualtedStyles = useMemo(() => {
     const stylesBorderR = _style?.borderRadius;
 
@@ -21,9 +26,10 @@ export const Card = ({ children, style: _style }: CardType) => {
     return { ..._style, borderRadius: calculatedBorderR };
   }, [_style]);
   return (
-    <AnimatedView style={[style.container, calcualtedStyles]}>
-      {children}
-    </AnimatedView>
+    <BackgroundColor style={{ alignSelf: "flex-start" }}>
+      <View style={[style.container, calcualtedStyles]}>{children}</View>
+      {renderDescription ? renderDescription() : null}
+    </BackgroundColor>
   );
 };
 
