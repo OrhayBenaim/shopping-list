@@ -1,11 +1,13 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
 import { HomeScreen } from "../screens/HomeScreen";
 import type { RootStackParamList, AuthParamList } from "../types";
-import { HomeStackScreen } from "../types";
+import { Units, HomeStackScreen } from "../types";
 import { Header } from "../components/Header";
+import { Product } from "../screens/Product";
 
 import { LinkingConfiguration } from "./LinkingConfiguration";
 
@@ -35,12 +37,13 @@ function RootNavigator() {
   );
 }
 
-const HomeNavigation = createNativeStackNavigator<AuthParamList>();
+const { Navigator, Screen } =
+  createSharedElementStackNavigator<AuthParamList>();
 
 function AuthStackNavigator() {
   return (
-    <HomeNavigation.Navigator initialRouteName={HomeStackScreen.HomeScreen}>
-      <HomeNavigation.Screen
+    <Navigator initialRouteName={HomeStackScreen.HomeScreen}>
+      <Screen
         name={HomeStackScreen.HomeScreen}
         component={HomeScreen}
         options={{
@@ -49,6 +52,28 @@ function AuthStackNavigator() {
           ),
         }}
       />
-    </HomeNavigation.Navigator>
+      <Screen
+        name={HomeStackScreen.Product}
+        component={Product}
+        initialParams={{
+          product: {
+            id: -1,
+            image: "",
+            name: "",
+            unit: Units.Gram,
+            category: { id: -1, name: "" },
+          },
+        }}
+        options={{
+          header: ({ navigation }) => (
+            <Header
+              onLeftIconPress={() => navigation.goBack()}
+              leftIcon="arrow-left"
+              title=""
+            />
+          ),
+        }}
+      />
+    </Navigator>
   );
 }
