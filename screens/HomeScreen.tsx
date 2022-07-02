@@ -8,21 +8,12 @@ import { Card } from "../components/Card";
 import { Categories } from "../components/CategoriesList/Categories";
 import { BackgroundColor, Text } from "../components/Themed";
 import { Font } from "../constants/Layout";
-import type { AuthParamList, ProductType } from "../types";
-import { HomeStackScreen, Units } from "../types";
+import { useProductStore } from "../store";
+import type { AuthParamList } from "../types";
+import { HomeStackScreen } from "../types";
 
-const Products: Array<ProductType> = [
-  {
-    id: 1,
-    name: "Milk",
-    unit: Units.Piece,
-    category: { id: 2, name: "Diary" },
-    image:
-      // eslint-disable-next-line max-len
-      "https://hinawi.co.il/wp-content/uploads/2020/10/%D7%97%D7%9C%D7%91-%D7%AA%D7%A0%D7%95%D7%91%D7%94-3-%D7%9C%D7%99%D7%98%D7%A8.jpg",
-  },
-];
 export function HomeScreen() {
+  const products = useProductStore((state) => state.products);
   const navigation = useNavigation<StackNavigationProp<AuthParamList>>();
   const NavigateToProduct = useCallback(
     (product) => {
@@ -35,7 +26,7 @@ export function HomeScreen() {
     <BackgroundColor>
       <Categories title="All Categories" type="normal" />
       <Text style={styles.title}>Home</Text>
-      {Products.map((product) => (
+      {products.map((product) => (
         <Pressable
           onPress={() => NavigateToProduct(product)}
           key={`product-${product.id}`}
