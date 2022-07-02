@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
 
@@ -9,11 +9,12 @@ import { Categories } from "../components/CategoriesList/Categories";
 import { BackgroundColor, Text } from "../components/Themed";
 import { Font } from "../constants/Layout";
 import { useProductStore } from "../store";
+import { productActionTypes } from "../store/product/actionTypes";
 import type { AuthParamList } from "../types";
-import { HomeStackScreen } from "../types";
+import { Units, HomeStackScreen } from "../types";
 
 export function HomeScreen() {
-  const products = useProductStore((state) => state.products);
+  const { products, dispatch } = useProductStore((state) => state);
   const navigation = useNavigation<StackNavigationProp<AuthParamList>>();
   const NavigateToProduct = useCallback(
     (product) => {
@@ -21,6 +22,25 @@ export function HomeScreen() {
     },
     [navigation]
   );
+
+  useEffect(() => {
+    dispatch({
+      type: productActionTypes.set,
+      payload: [
+        {
+          id: 1,
+          name: "Milk",
+          amount: 0,
+          favorite: false,
+          unit: Units.Piece,
+          category: { id: 2, name: "Diary" },
+          image:
+            // eslint-disable-next-line max-len
+            "https://hinawi.co.il/wp-content/uploads/2020/10/%D7%97%D7%9C%D7%91-%D7%AA%D7%A0%D7%95%D7%91%D7%94-3-%D7%9C%D7%99%D7%98%D7%A8.jpg",
+        },
+      ],
+    });
+  }, [dispatch]);
 
   return (
     <BackgroundColor>

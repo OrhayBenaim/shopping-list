@@ -14,6 +14,6 @@ export const productReducer = (
 ) => {
   switch (type) {
     case productActionTypes.set:
-      state.products[0].amount = 1;
+      state.products = payload;
   }
 };
