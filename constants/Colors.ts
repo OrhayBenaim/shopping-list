@@ -2,7 +2,7 @@ export const Colors = {
   light: {
     text: "#000",
     primary: "#45C163",
-    background: "#F2F2F2",
+    background: "#F1F1F2",
     viewColor: "#fff",
     textLight: "#fff",
     lightAccent: "#C2C2C2",

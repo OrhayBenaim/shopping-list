@@ -36,7 +36,7 @@ export function HomeScreen() {
           category: { id: 2, name: "Diary" },
           image:
             // eslint-disable-next-line max-len
-            "https://hinawi.co.il/wp-content/uploads/2020/10/%D7%97%D7%9C%D7%91-%D7%AA%D7%A0%D7%95%D7%91%D7%94-3-%D7%9C%D7%99%D7%98%D7%A8.jpg",
+            "https://images.squarespace-cdn.com/content/v1/60271465598ca61a670b27b0/9ad36907-601b-4ba3-a5c0-246559def497/Camperdown+Fresh+Whole+Milk+2L.png",
         },
       ],
     });

@@ -70,6 +70,7 @@ function AuthStackNavigator() {
               onLeftIconPress={() => navigation.goBack()}
               leftIcon="arrow-left"
               title=""
+              transparent
             />
           ),
         }}
