@@ -3,19 +3,25 @@ import create from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import type { productActionTypes, UserProduct } from "./product/actionTypes";
-import { productReducer } from "./product/reducer";
+import type { UserProduct } from "./products/types";
+import { setProducts } from "./products/actions";
 
 export interface ProductStoreType {
   products: Array<UserProduct>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: (args: { type: productActionTypes; payload: any }) => void;
+  computed: { productsLength: number };
+
+  setProducts: (products: Array<UserProduct>) => void;
 }
 export const useProductStore = create<ProductStoreType>()(
   persist(
-    immer((set) => ({
+    immer((set, get) => ({
       products: [],
-      dispatch: (args) => set((state) => productReducer(state, args)),
+      computed: {
+        get productsLength() {
+          return get().products.length;
+        },
+      },
+      setProducts: (products) => set((state) => setProducts(state, products)),
     })),
     {
       name: "products",

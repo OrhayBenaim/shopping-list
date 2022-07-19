@@ -9,12 +9,11 @@ import { Categories } from "../components/CategoriesList/Categories";
 import { BackgroundColor, Text } from "../components/Themed";
 import { Font } from "../constants/Layout";
 import { useProductStore } from "../store";
-import { productActionTypes } from "../store/product/actionTypes";
 import type { AuthParamList } from "../types";
 import { Units, HomeStackScreen } from "../types";
 
 export function HomeScreen() {
-  const { products, dispatch } = useProductStore((state) => state);
+  const { products, setProducts } = useProductStore((state) => state);
   const navigation = useNavigation<StackNavigationProp<AuthParamList>>();
   const NavigateToProduct = useCallback(
     (product) => {
@@ -24,23 +23,20 @@ export function HomeScreen() {
   );
 
   useEffect(() => {
-    dispatch({
-      type: productActionTypes.set,
-      payload: [
-        {
-          id: 1,
-          name: "Milk",
-          amount: 0,
-          favorite: false,
-          unit: Units.Piece,
-          category: { id: 2, name: "Diary" },
-          image:
-            // eslint-disable-next-line max-len
-            "https://images.squarespace-cdn.com/content/v1/60271465598ca61a670b27b0/9ad36907-601b-4ba3-a5c0-246559def497/Camperdown+Fresh+Whole+Milk+2L.png",
-        },
-      ],
-    });
-  }, [dispatch]);
+    setProducts([
+      {
+        id: 1,
+        name: "Milk",
+        amount: 0,
+        favorite: false,
+        unit: Units.Piece,
+        category: { id: 2, name: "Diary" },
+        image:
+          // eslint-disable-next-line max-len
+          "https://images.squarespace-cdn.com/content/v1/60271465598ca61a670b27b0/9ad36907-601b-4ba3-a5c0-246559def497/Camperdown+Fresh+Whole+Milk+2L.png",
+      },
+    ]);
+  }, [setProducts]);
 
   return (
     <BackgroundColor>
