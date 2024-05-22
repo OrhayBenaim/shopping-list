@@ -1,31 +1,25 @@
-import {
-  border,
-  createTheme,
-  useTheme as restyleUseTheme,
-} from '@shopify/restyle';
+import { createTheme, useTheme as restyleUseTheme } from "@shopify/restyle";
 
 const palette = {
-  purpleLight: '#8C6FF7',
-  purplePrimary: '#5A31F4',
-  purpleDark: '#3F22AB',
-
-  greenLight: '#56DCBA',
-  greenPrimary: '#26AE60',
-  greenDark: '#0A906E',
-
-  black: '#0B0B0B',
-  white: '#fff',
-  offWhite: '#f4f4f4',
-  borderWhite: '#ccc',
-  gray: '#888',
+  offWhite: "#f0eded",
+  border: "#3B4A3F",
+  greenPrimary: "#26AE60",
+  blueLight: "#00ABF6",
+  bluePrimary: "#0077BD",
+  white: "#FFFFFF",
+  red: "#c63535",
 };
 
 const theme = createTheme({
   colors: {
     mainBackground: palette.white,
-    secondaryBackground: palette.gray,
+    secondaryBackground: palette.offWhite,
     primaryAction: palette.greenPrimary,
-    border: palette.borderWhite,
+    secondaryActionLight: palette.blueLight,
+    secondaryAction: palette.bluePrimary,
+    border: palette.border,
+    dangerAction: palette.red,
+    lightText: palette.white,
   },
   spacing: {
     s: 8,
@@ -35,7 +29,7 @@ const theme = createTheme({
   },
   textVariants: {
     header: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fontSize: 34,
     },
     body: {
@@ -49,11 +43,11 @@ const theme = createTheme({
   tag: {
     normal: {
       button: {
-        backgroundColor: palette.offWhite,
+        backgroundColor: palette.white,
         padding: 10,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: palette.borderWhite,
+        borderColor: palette.border,
       },
       text: {
         fontSize: 16,
@@ -64,7 +58,7 @@ const theme = createTheme({
       text: {
         fontSize: 16,
         color: palette.white,
-        fontWeight: 'bold',
+        fontWeight: "bold",
       },
       button: {
         padding: 10,

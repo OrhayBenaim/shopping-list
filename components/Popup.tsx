@@ -1,10 +1,11 @@
-import React, { ReactNode } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { ReactNode, useEffect } from "react";
+import { BackHandler, StyleSheet } from "react-native";
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
+} from "@gorhom/bottom-sheet";
+import { useTheme } from "@/utils/theme";
 
 type PopupStoreType = {
   setOpen: (open: boolean) => void;
@@ -23,15 +24,16 @@ interface PopupProviderProps {
 export const usePopup = () => {
   const context = React.useContext(PopupContext);
   if (context === undefined) {
-    throw new Error('usePopup must be used within a PopupProvider');
+    throw new Error("usePopup must be used within a PopupProvider");
   }
   return context;
 };
 
-const DEFAULT_SNAP_POINT = '75%';
+const DEFAULT_SNAP_POINT = "75%";
 export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [snapPoints, setSnapPoints] = React.useState([DEFAULT_SNAP_POINT]);
   const [content, _setContent] = React.useState<React.ReactNode>(undefined);
+  const theme = useTheme();
   // ref
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
@@ -53,6 +55,18 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        setOpen(false);
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <PopupContext.Provider value={{ setOpen, setContent: onSetContent }}>
       <BottomSheetModalProvider>
@@ -62,6 +76,21 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
+          style={{
+            backgroundColor: "rgba(255, 255, 255,0)", // <==== HERE
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 12,
+            },
+            shadowOpacity: 0.58,
+            shadowRadius: 16.0,
+
+            elevation: 24,
+          }}
+          backgroundStyle={{
+            backgroundColor: theme.colors.secondaryBackground,
+          }}
         >
           <BottomSheetView style={styles.contentContainer}>
             {content}
@@ -74,7 +103,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     padding: 20,
   },
 });

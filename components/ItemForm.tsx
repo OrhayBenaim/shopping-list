@@ -4,17 +4,17 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { Item } from '@/models/item';
-import { useEffect, useReducer, useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '@/utils/theme';
-import { useCamera } from './Camera';
-import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+} from "react-native";
+import { Item } from "@/models/item";
+import { useEffect, useReducer, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@/utils/theme";
+import { useCamera } from "./Camera";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
-type fields = 'name' | 'category' | 'quantity' | 'missingThreshold' | 'camera';
+type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
   item: Item;
   onSubmit: (item: Item) => void;
@@ -37,7 +37,7 @@ const ItemForm = ({
   useEffect(() => {
     if (camera.uri) {
       setMediaSelection(false);
-      dispatch({ type: 'updateImage', payload: camera.uri });
+      dispatch({ type: "updateImage", payload: camera.uri });
       saveLocalImage(camera.uri);
     }
   }, [camera.uri]);
@@ -49,16 +49,15 @@ const ItemForm = ({
   };
 
   const saveLocalImage = async (uri: string) => {
-    console.log(FileSystem.documentDirectory);
     if (FileSystem.documentDirectory) {
-      const fileName = uri.split('/').pop();
+      const fileName = uri.split("/").pop();
       const newPath = FileSystem.documentDirectory + fileName;
       try {
         await FileSystem.moveAsync({
           from: uri,
           to: newPath,
         });
-        dispatch({ type: 'updateImage', payload: newPath });
+        dispatch({ type: "updateImage", payload: newPath });
       } catch (error) {
         throw error;
       }
@@ -73,7 +72,7 @@ const ItemForm = ({
 
     if (!result.canceled) {
       setMediaSelection(false);
-      dispatch({ type: 'updateImage', payload: result.assets[0].uri });
+      dispatch({ type: "updateImage", payload: result.assets[0].uri });
       saveLocalImage(result.assets[0].uri);
     }
   };
@@ -84,22 +83,39 @@ const ItemForm = ({
         style={[
           styles.container,
           {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
             gap: 10,
             marginBottom: 20,
           },
         ]}
       >
         <TouchableOpacity
-          style={styles.addButton}
+          style={[
+            styles.addButton,
+            {
+              backgroundColor: theme.colors.primaryAction,
+            },
+          ]}
           onPress={() => camera.setOpen(true)}
         >
-          <Text style={styles.buttonText}>צלם תמונה</Text>
+          <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
+            צלם תמונה
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addButton} onPress={pickImage}>
-          <Text style={styles.buttonText}>בחר תמונה</Text>
+        <TouchableOpacity
+          style={[
+            styles.addButton,
+            {
+              backgroundColor: theme.colors.primaryAction,
+            },
+          ]}
+          onPress={pickImage}
+        >
+          <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
+            בחר תמונה
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -107,52 +123,72 @@ const ItemForm = ({
 
   return (
     <View style={styles.container}>
-      {!hiddenFields.includes('name') && (
+      {!hiddenFields.includes("name") && (
         <>
           <Text style={styles.label}>שם</Text>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.mainBackground,
+              },
+            ]}
             onEndEditing={(e) => {
-              dispatch({ type: 'updateName', payload: e.nativeEvent.text });
+              dispatch({ type: "updateName", payload: e.nativeEvent.text });
             }}
             defaultValue={item.name}
           />
         </>
       )}
-      {!hiddenFields.includes('category') && (
+      {!hiddenFields.includes("category") && (
         <>
           <Text style={styles.label}>קטגוריה</Text>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.mainBackground,
+              },
+            ]}
             onEndEditing={(e) => {
-              dispatch({ type: 'updateCategory', payload: e.nativeEvent.text });
+              dispatch({ type: "updateCategory", payload: e.nativeEvent.text });
             }}
             defaultValue={item.category}
           />
         </>
       )}
-      {!hiddenFields.includes('quantity') && (
+      {!hiddenFields.includes("quantity") && (
         <>
           <Text style={styles.label}>כמות</Text>
           <TextInput
             keyboardType="numeric"
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.mainBackground,
+              },
+            ]}
             onEndEditing={(e) => {
-              dispatch({ type: 'updateQuantity', payload: e.nativeEvent.text });
+              dispatch({ type: "updateQuantity", payload: e.nativeEvent.text });
             }}
             defaultValue={item.quantity.toString()}
           />
         </>
       )}
-      {!hiddenFields.includes('missingThreshold') && (
+      {!hiddenFields.includes("missingThreshold") && (
         <>
           <Text style={styles.label}>כמות לקנייה</Text>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.mainBackground,
+              },
+            ]}
             keyboardType="numeric"
             onEndEditing={(e) => {
               dispatch({
-                type: 'updateMissingThreshold',
+                type: "updateMissingThreshold",
                 payload: e.nativeEvent.text,
               });
             }}
@@ -160,12 +196,15 @@ const ItemForm = ({
           />
         </>
       )}
-      {!hiddenFields.includes('camera') && (
+      {!hiddenFields.includes("camera") && (
         <TouchableOpacity
           style={[
             styles.imageButton,
             {
-              borderColor: theme.colors.border,
+              borderColor: theme.colors.primaryAction,
+              backgroundColor: state.image
+                ? "transparent"
+                : theme.colors.mainBackground,
             },
           ]}
           onPress={() => {
@@ -176,13 +215,13 @@ const ItemForm = ({
             <Image
               style={[styles.image, StyleSheet.absoluteFill]}
               source={{ uri: state.image }}
-              blurRadius={2}
+              blurRadius={5}
               contentFit="cover"
             />
           )}
           <Ionicons
             style={{
-              color: theme.colors.border,
+              color: theme.colors.primaryAction,
             }}
             size={40}
             name="camera-outline"
@@ -191,15 +230,34 @@ const ItemForm = ({
       )}
       <View style={styles.buttons}>
         {deleteAble && (
-          <TouchableOpacity style={styles.deleteButton} onPress={onDeletePress}>
-            <Text style={styles.buttonText}>מחק</Text>
+          <TouchableOpacity
+            style={[
+              styles.deleteButton,
+              {
+                backgroundColor: theme.colors.dangerAction,
+              },
+            ]}
+            onPress={onDeletePress}
+          >
+            <Text
+              style={[styles.buttonText, { color: theme.colors.lightText }]}
+            >
+              מחק
+            </Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          style={styles.addButton}
+          style={[
+            styles.addButton,
+            {
+              backgroundColor: theme.colors.primaryAction,
+            },
+          ]}
           onPress={() => onSubmit(state)}
         >
-          <Text style={styles.buttonText}>שמור</Text>
+          <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
+            שמור
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -212,83 +270,79 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: '100%',
-    position: 'absolute',
+    width: "100%",
+    position: "absolute",
     borderRadius: 10,
   },
   imageButton: {
     borderRadius: 10,
-    width: '100%',
+    width: "100%",
     height: 75,
     marginBottom: 20,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    borderWidth: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   label: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   input: {
-    width: '100%',
+    width: "100%",
     padding: 10,
     marginBottom: 20,
     borderRadius: 10,
-    backgroundColor: '#f4f4f4',
     fontSize: 18,
-    textAlign: 'right',
+    textAlign: "right",
   },
   buttons: {
-    flexDirection: 'row-reverse',
+    flexDirection: "row-reverse",
     gap: 10,
   },
   addButton: {
-    backgroundColor: '#26AE60',
     padding: 10,
     borderRadius: 10,
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   deleteButton: {
-    backgroundColor: '#c63535',
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
 type Action = {
   type:
-    | 'updateQuantity'
-    | 'updateCategory'
-    | 'updateMissingThreshold'
-    | 'updateName'
-    | 'updateImage';
+    | "updateQuantity"
+    | "updateCategory"
+    | "updateMissingThreshold"
+    | "updateName"
+    | "updateImage";
   payload: string;
 };
 
 function reducer(state: Item, action: Action): Item {
   switch (action.type) {
-    case 'updateQuantity':
+    case "updateQuantity":
       const quantity = parseFloat(action.payload);
       return { ...state, quantity: quantity >= 0 ? quantity : 0 };
-    case 'updateCategory':
+    case "updateCategory":
       return { ...state, category: action.payload };
-    case 'updateMissingThreshold':
+    case "updateMissingThreshold":
       const missingThreshold = parseFloat(action.payload);
       return {
         ...state,
         missingThreshold: missingThreshold >= 0 ? missingThreshold : 0,
       };
-    case 'updateName':
+    case "updateName":
       return { ...state, name: action.payload };
-    case 'updateImage':
+    case "updateImage":
       return { ...state, image: action.payload };
     default:
       return state;

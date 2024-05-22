@@ -5,13 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { observer } from '@legendapp/state/react';
-import { Item } from '@/models/item';
-import { useTheme } from '@/utils/theme';
-import { usePopup } from './Popup';
-import { Image } from 'expo-image';
+} from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { observer } from "@legendapp/state/react";
+import { Item } from "@/models/item";
+import { useTheme } from "@/utils/theme";
+import { usePopup } from "./Popup";
+import { Image } from "expo-image";
 
 interface Props {
   item: Item;
@@ -42,7 +42,7 @@ const ItemComponent = observer(
           }}
           contentFit="fill"
           source={{ uri: item.image }}
-        />,
+        />
       );
     };
 
@@ -58,7 +58,7 @@ const ItemComponent = observer(
             <TouchableOpacity onPress={onImagePreview}>
               <Ionicons
                 style={{
-                  color: theme.colors.secondaryBackground,
+                  color: theme.colors.secondaryAction,
                 }}
                 size={30}
                 name="image-outline"
@@ -69,7 +69,14 @@ const ItemComponent = observer(
             {item.name}
           </Text>
         </TouchableOpacity>
-        <View style={styles.itemControls}>
+        <View
+          style={[
+            styles.itemControls,
+            {
+              borderColor: theme.colors.border,
+            },
+          ]}
+        >
           {IncreaseQuantity && (
             <TouchableOpacity
               onPress={() => {
@@ -99,15 +106,15 @@ const ItemComponent = observer(
         </View>
       </View>
     );
-  },
+  }
 );
 export default ItemComponent;
 const styles = StyleSheet.create({
   item: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
     height: 50,
   },
@@ -116,27 +123,26 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 24,
-    textAlign: 'left',
+    textAlign: "left",
   },
   editArea: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
 
     gap: 10,
   },
   itemControls: {
-    flexDirection: 'row',
-    borderColor: '#f4f4f4',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 15,
   },
   quantityInput: {
     fontSize: 20,
     height: 30,
     width: 30,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
