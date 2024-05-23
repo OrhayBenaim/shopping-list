@@ -4,15 +4,15 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-gesture-handler";
-import * as DevClient from "expo-dev-client";
 import { PopupProvider } from "@/components/Popup";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BackHandler, I18nManager } from "react-native";
 import theme from "@/utils/theme";
 import AppLayout from "@/components/AppLayout";
 import { CameraProvider } from "@/components/Camera";
+import { settings } from "@/utils/store";
 
-I18nManager.forceRTL(true);
+I18nManager.forceRTL(settings.get().language === "he");
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,

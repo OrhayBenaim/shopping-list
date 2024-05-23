@@ -1,6 +1,6 @@
 import {
+  I18nManager,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -13,6 +13,8 @@ import { useCamera } from "./Camera";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import { Text } from "@/components/ui/Text";
+import { translations } from "@/utils/translations";
 
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
@@ -101,7 +103,7 @@ const ItemForm = ({
           onPress={() => camera.setOpen(true)}
         >
           <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
-            צלם תמונה
+            {translations.capturePicture}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -114,7 +116,7 @@ const ItemForm = ({
           onPress={pickImage}
         >
           <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
-            בחר תמונה
+            {translations.choosePicture}
           </Text>
         </TouchableOpacity>
       </View>
@@ -125,7 +127,7 @@ const ItemForm = ({
     <View style={styles.container}>
       {!hiddenFields.includes("name") && (
         <>
-          <Text style={styles.label}>שם</Text>
+          <Text style={styles.label}>{translations.name}</Text>
           <TextInput
             style={[
               styles.input,
@@ -142,7 +144,7 @@ const ItemForm = ({
       )}
       {!hiddenFields.includes("category") && (
         <>
-          <Text style={styles.label}>קטגוריה</Text>
+          <Text style={styles.label}>{translations.category}</Text>
           <TextInput
             style={[
               styles.input,
@@ -159,7 +161,7 @@ const ItemForm = ({
       )}
       {!hiddenFields.includes("quantity") && (
         <>
-          <Text style={styles.label}>כמות</Text>
+          <Text style={styles.label}>{translations.quantity}</Text>
           <TextInput
             keyboardType="numeric"
             style={[
@@ -177,7 +179,7 @@ const ItemForm = ({
       )}
       {!hiddenFields.includes("missingThreshold") && (
         <>
-          <Text style={styles.label}>כמות לקנייה</Text>
+          <Text style={styles.label}>{translations.missingThreshold}</Text>
           <TextInput
             style={[
               styles.input,
@@ -242,7 +244,7 @@ const ItemForm = ({
             <Text
               style={[styles.buttonText, { color: theme.colors.lightText }]}
             >
-              מחק
+              {translations.delete}
             </Text>
           </TouchableOpacity>
         )}
@@ -256,7 +258,7 @@ const ItemForm = ({
           onPress={() => onSubmit(state)}
         >
           <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
-            שמור
+            {translations.save}
           </Text>
         </TouchableOpacity>
       </View>
@@ -287,6 +289,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: "bold",
+    display: "flex",
+    textAlign: "left",
   },
   input: {
     width: "100%",
@@ -294,7 +298,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
     fontSize: 18,
-    textAlign: "right",
+    textAlign: I18nManager.isRTL ? "right" : "left",
   },
   buttons: {
     flexDirection: "row-reverse",

@@ -1,29 +1,33 @@
-import { observable } from '@legendapp/state';
-import { ObservablePersistMMKV } from '@legendapp/state/persist-plugins/mmkv';
-import { persistObservable } from '@legendapp/state/persist';
-import { Item } from '@/models/item';
+import { observable } from "@legendapp/state";
+import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
+import { persistObservable } from "@legendapp/state/persist";
+import { Item } from "@/models/item";
 
 export const state = observable<Item[]>([]);
 
-export const settings = observable({
+export const settings = observable<{
+  endpoint?: string;
+  language: "en" | "he";
+}>({
   endpoint: undefined,
+  language: "en",
 });
 
 export const snapshot = observable<(Item | undefined)[]>([]);
 let retryInterval: NodeJS.Timeout | undefined = undefined;
 
 persistObservable(settings, {
-  local: 'settings', // Unique name
+  local: "settings", // Unique name
   pluginLocal: ObservablePersistMMKV,
 });
 
 persistObservable(snapshot, {
-  local: 'snapshot', // Unique name
+  local: "snapshot", // Unique name
   pluginLocal: ObservablePersistMMKV,
 });
 
 persistObservable(state, {
-  local: 'store', // Unique name
+  local: "store", // Unique name
   pluginLocal: ObservablePersistMMKV,
   pluginRemote: {
     get: ({ onChange }) => {
@@ -34,7 +38,7 @@ persistObservable(state, {
             await fetch(`${endpoint}/ping`);
             if (snapshot.get().length === 0) {
               const result = await fetch(`${endpoint}/items`).then((res) =>
-                res.json(),
+                res.json()
               );
               const items = state.get();
               const updatedItems = result.value.map((item: Item) => {
@@ -62,9 +66,9 @@ persistObservable(state, {
           if (endpoint && snapshotItems.length > 0) {
             await fetch(`${endpoint}/ping`);
             await fetch(`${endpoint}/items`, {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify(snapshotItems),
             });
@@ -85,7 +89,7 @@ export const GetMissingItems = () => {
 
 export const FilteredItemsByCategories = (
   items: Item[],
-  categories: string[],
+  categories: string[]
 ) => {
   if (categories.length === 0) return items;
   return items.filter((item) => categories.includes(item.category));
@@ -136,14 +140,11 @@ export const ChangeQuantity = (item: Item, quantity: string) => {
 };
 
 export const ItemsByCategories = (items: Item[]) => {
-  return items.reduce(
-    (acc, current) => {
-      const key = current.category;
-      if (!acc[key]) acc[key] = [];
-      //eslint-disable-next-line
-      acc[key].push(current);
-      return acc;
-    },
-    {} as { [key: string]: Item[] },
-  );
+  return items.reduce((acc, current) => {
+    const key = current.category;
+    if (!acc[key]) acc[key] = [];
+    //eslint-disable-next-line
+    acc[key].push(current);
+    return acc;
+  }, {} as { [key: string]: Item[] });
 };

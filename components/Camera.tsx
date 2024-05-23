@@ -1,16 +1,12 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import {
   useCameraPermissions,
   CameraView as ExpoCameraView,
-} from 'expo-camera';
-import React, { useEffect } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  BackHandler,
-} from 'react-native';
+} from "expo-camera";
+import React, { useEffect } from "react";
+import { StyleSheet, TouchableOpacity, View, BackHandler } from "react-native";
+import { Text } from "@/components/ui/Text";
+import { translations } from "@/utils/translations";
 
 type CameraStoreType = {
   setOpen: (open: boolean) => void;
@@ -29,7 +25,7 @@ interface CameraProviderProps {
 export const useCamera = () => {
   const context = React.useContext(CameraContext);
   if (context === undefined) {
-    throw new Error('useCamera must be used within a CameraProvider');
+    throw new Error("useCamera must be used within a CameraProvider");
   }
   return context;
 };
@@ -42,14 +38,14 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
+      "hardwareBackPress",
       () => {
         if (open) {
           setOpen(false);
           return true;
         }
         return false;
-      },
+      }
     );
 
     return () => backHandler.remove();
@@ -83,7 +79,9 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
           onPress={() => setOpen(false)}
         >
           <View style={styles.permissionContainer}>
-            <Text style={styles.permissionText}>יש צורך באישור המצלמה</Text>
+            <Text style={styles.permissionText}>
+              {translations.needToAllowCamera}
+            </Text>
             <TouchableOpacity
               style={styles.permissionButton}
               onPress={(e) => {
@@ -91,7 +89,7 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
                 requestPermission();
               }}
             >
-              <Text style={styles.buttonText}>אשר מצלמה</Text>
+              <Text style={styles.buttonText}>{translations.allowCamera}</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -129,7 +127,7 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     padding: 20,
   },
   camera: {
@@ -137,56 +135,56 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
+    flexDirection: "row",
+    backgroundColor: "transparent",
     marginBottom: 30,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: '#fff',
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#fff",
     borderRadius: 100,
     borderWidth: 5,
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     aspectRatio: 1,
     padding: 10,
     height: 100,
   },
   cameraIcon: {
-    color: '#fff',
+    color: "#fff",
   },
   permissionDropShadow: {
     flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: 100,
-    alignItems: 'center',
+    alignItems: "center",
   },
   permissionText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   permissionContainer: {
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
   },
 
   permissionButton: {
-    backgroundColor: '#26AE60',
+    backgroundColor: "#26AE60",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

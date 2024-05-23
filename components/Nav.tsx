@@ -1,31 +1,37 @@
-import 'react-native-get-random-values';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Link, usePathname } from 'expo-router';
+import "react-native-get-random-values";
+import {
+  Dimensions,
+  I18nManager,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Svg, { Path } from "react-native-svg";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Link, usePathname } from "expo-router";
 import Animated, {
   useSharedValue,
   withTiming,
   useAnimatedStyle,
   Easing,
-} from 'react-native-reanimated';
-import { useLayoutEffect } from 'react';
-import { usePopup } from './Popup';
-import ItemForm from './ItemForm';
-import { v4 as uuidv4 } from 'uuid';
-import { onInsert } from '@/utils/store';
-import { Item } from '@/models/item';
-import { useTheme } from '@/utils/theme';
+} from "react-native-reanimated";
+import { useLayoutEffect } from "react";
+import { usePopup } from "./Popup";
+import ItemForm from "./ItemForm";
+import { v4 as uuidv4 } from "uuid";
+import { onInsert } from "@/utils/store";
+import { Item } from "@/models/item";
+import { useTheme } from "@/utils/theme";
 
-const WIDTH = Dimensions.get('window').width;
+const WIDTH = Dimensions.get("window").width;
 const ADD_BUTTON_SIZE = WIDTH / 4;
 const ICON_SIZE = WIDTH / 8;
 
 const INDICATOR_SIZE = ICON_SIZE * 1.2;
 
 const INDICATOR_POSITIONS = {
-  '/': WIDTH / 4 - ICON_SIZE,
-  '/Missing': WIDTH - WIDTH / 4,
+  "/": WIDTH / 4 - ICON_SIZE,
+  "/Missing": WIDTH - WIDTH / 4,
 } as {
   [key: string]: number;
 };
@@ -57,8 +63,8 @@ export function Nav() {
     setContent(
       <ItemForm
         item={{
-          name: '',
-          category: '',
+          name: "",
+          category: "",
           quantity: 0,
           missingThreshold: 0,
           missing: true,
@@ -66,7 +72,7 @@ export function Nav() {
           updatedAt: new Date().getTime(),
         }}
         onSubmit={onInsertItem}
-      />,
+      />
     );
   };
 
@@ -129,39 +135,44 @@ export function Nav() {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
+    position: "relative",
   },
   svg: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 360 / 85,
   },
   indicator: {
     height: INDICATOR_SIZE / 15,
     width: INDICATOR_SIZE,
     borderRadius: INDICATOR_SIZE / 10,
-    position: 'absolute',
+    position: "absolute",
     bottom: INDICATOR_SIZE / 8,
-    transform: [{ translateX: (INDICATOR_SIZE - ICON_SIZE) / 2 }],
+    transform: [
+      {
+        translateX:
+          ((INDICATOR_SIZE - ICON_SIZE) / 2) * (I18nManager.isRTL ? 1 : -1),
+      },
+    ],
   },
   addButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
-    left: '50%',
+    left: "50%",
     transform: [
-      { translateX: ADD_BUTTON_SIZE / 2 },
+      { translateX: (ADD_BUTTON_SIZE / 2) * (I18nManager.isRTL ? 1 : -1) },
       { translateY: -ADD_BUTTON_SIZE / 2.3 },
     ],
   },
   homeButton: {
-    position: 'absolute',
-    top: '60%',
-    left: INDICATOR_POSITIONS['/'],
+    position: "absolute",
+    top: "60%",
+    left: INDICATOR_POSITIONS["/"],
     transform: [{ translateY: -ICON_SIZE / 1.8 }],
   },
   missingButton: {
-    position: 'absolute',
-    top: '60%',
-    left: INDICATOR_POSITIONS['/Missing'],
+    position: "absolute",
+    top: "60%",
+    left: INDICATOR_POSITIONS["/Missing"],
     transform: [{ translateY: -ICON_SIZE / 1.8 }],
   },
 });

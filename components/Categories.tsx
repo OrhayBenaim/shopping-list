@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import Tag from '@/components/ui/Tag';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useState } from "react";
+import { StyleSheet } from "react-native";
+import Tag from "@/components/ui/Tag";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface CategoriesProps {
   categories: string[];
@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
   categories: {
     gap: 10,
     paddingVertical: 10,
-    direction: 'rtl',
     flex: 1,
   },
 });

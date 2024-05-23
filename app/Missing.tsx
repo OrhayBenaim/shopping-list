@@ -1,5 +1,11 @@
-import { Dimensions, ScrollView, StyleSheet, TextInput } from 'react-native';
-import { observer } from '@legendapp/state/react';
+import {
+  Dimensions,
+  I18nManager,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+} from "react-native";
+import { observer } from "@legendapp/state/react";
 import {
   FilteredItemsByCategories,
   FilteredItemsByName,
@@ -7,24 +13,25 @@ import {
   GetMissingItems,
   ItemsByCategories,
   onUpdate,
-} from '@/utils/store';
-import type { Item } from '@/models/item';
-import { useState } from 'react';
-import { usePopup } from '@/components/Popup';
-import ItemForm from '@/components/ItemForm';
-import ItemsComponent from '@/components/ItemsComponent';
-import Categories from '@/components/Categories';
+} from "@/utils/store";
+import type { Item } from "@/models/item";
+import { useState } from "react";
+import { usePopup } from "@/components/Popup";
+import ItemForm from "@/components/ItemForm";
+import ItemsComponent from "@/components/ItemsComponent";
+import Categories from "@/components/Categories";
+import { translations } from "@/utils/translations";
 
-const WIDTH = Dimensions.get('window').width;
+const WIDTH = Dimensions.get("window").width;
 
 const Missing = observer(() => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const { setContent, setOpen } = usePopup();
 
   const filteredItems = FilteredItemsByName(
     FilteredItemsByCategories(GetMissingItems(), selectedCategories),
-    search,
+    search
   );
 
   const itemsByCategories = ItemsByCategories(filteredItems);
@@ -38,10 +45,10 @@ const Missing = observer(() => {
     setContent(
       <ItemForm
         onSubmit={onItemPopupSave}
-        hiddenFields={['category', 'missingThreshold', 'name', 'camera']}
+        hiddenFields={["category", "missingThreshold", "name", "camera"]}
         item={item}
       />,
-      '30%',
+      "30%"
     );
   };
 
@@ -50,7 +57,7 @@ const Missing = observer(() => {
       <TextInput
         onChangeText={(value) => setSearch(value)}
         style={styles.input}
-        placeholder="חיפוש"
+        placeholder={translations.search}
       />
       <Categories
         categories={GetMissingCategories()}
@@ -76,11 +83,12 @@ const styles = StyleSheet.create({
     width: WIDTH,
   },
   input: {
-    width: '100%',
+    width: "100%",
     padding: 10,
     marginBottom: 20,
     borderRadius: 10,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: "#f4f4f4",
     fontSize: 18,
+    textAlign: I18nManager.isRTL ? "right" : "left",
   },
 });

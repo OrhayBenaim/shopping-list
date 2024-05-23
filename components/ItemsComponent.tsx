@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { observer } from '@legendapp/state/react';
-import { Item } from '@/models/item';
-import ItemComponent from './Item';
+import { StyleSheet, View } from "react-native";
+import { observer } from "@legendapp/state/react";
+import { Item } from "@/models/item";
+import ItemComponent from "./Item";
+import { Text } from "@/components/ui/Text";
 
 interface Props {
   items: Item[];
@@ -35,11 +36,11 @@ const ItemsComponent = observer(
         ))}
       </View>
     );
-  },
+  }
 );
 export default ItemsComponent;
 const styles = StyleSheet.create({
   category: {
-    textAlign: 'left',
+    textAlign: "left",
   },
 });

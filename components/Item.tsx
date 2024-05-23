@@ -1,7 +1,6 @@
 import {
   GestureResponderEvent,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -12,6 +11,7 @@ import { Item } from "@/models/item";
 import { useTheme } from "@/utils/theme";
 import { usePopup } from "./Popup";
 import { Image } from "expo-image";
+import { Text } from "@/components/ui/Text";
 
 interface Props {
   item: Item;
@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 24,
-    textAlign: "left",
   },
   editArea: {
     flex: 1,
