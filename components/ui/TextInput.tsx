@@ -1,14 +1,14 @@
 import { settings } from "@/utils/store";
 import { observer } from "@legendapp/state/react";
 import { useMemo } from "react";
-import { Text as ReactText, TextProps } from "react-native";
+import { TextInput as ReactTextInput, TextInputProps } from "react-native";
 
-export const Text = observer((props: TextProps) => {
+export const TextInput = observer((props: TextInputProps) => {
   const propsStyle = useMemo(() => {
     return Array.isArray(props.style) ? props.style : [props.style];
   }, [props.style]);
   return (
-    <ReactText
+    <ReactTextInput
       {...props}
       style={[
         {
@@ -18,6 +18,6 @@ export const Text = observer((props: TextProps) => {
       ]}
     >
       {props.children}
-    </ReactText>
+    </ReactTextInput>
   );
 });

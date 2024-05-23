@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  I18nManager,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { Dimensions, I18nManager, ScrollView, StyleSheet } from "react-native";
 import { observer } from "@legendapp/state/react";
 import {
   FilteredItemsByCategories,
@@ -21,6 +15,7 @@ import ItemForm from "@/components/ItemForm";
 import ItemsComponent from "@/components/ItemsComponent";
 import Categories from "@/components/Categories";
 import { translations } from "@/utils/translations";
+import { TextInput } from "@/components/ui/TextInput";
 
 const WIDTH = Dimensions.get("window").width;
 
@@ -89,6 +84,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#f4f4f4",
     fontSize: 18,
-    textAlign: I18nManager.isRTL ? "right" : "left",
   },
 });

@@ -12,6 +12,7 @@ import { useTheme } from "@/utils/theme";
 import { usePopup } from "./Popup";
 import { Image } from "expo-image";
 import { Text } from "@/components/ui/Text";
+import { settings } from "@/utils/store";
 
 interface Props {
   item: Item;
@@ -47,12 +48,25 @@ const ItemComponent = observer(
     };
 
     return (
-      <View style={styles.item} key={item.id}>
+      <View
+        style={[
+          styles.item,
+          {
+            flexDirection: settings.get().isRTL ? "row-reverse" : "row",
+          },
+        ]}
+        key={item.id}
+      >
         <TouchableOpacity
           onPress={() => {
             onItemPress(item);
           }}
-          style={styles.editArea}
+          style={[
+            styles.editArea,
+            {
+              flexDirection: settings.get().isRTL ? "row-reverse" : "row",
+            },
+          ]}
         >
           {item.image && (
             <TouchableOpacity onPress={onImagePreview}>
@@ -112,7 +126,6 @@ export default ItemComponent;
 const styles = StyleSheet.create({
   item: {
     width: "100%",
-    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
@@ -126,13 +139,12 @@ const styles = StyleSheet.create({
   },
   editArea: {
     flex: 1,
-    flexDirection: "row",
     alignItems: "center",
 
     gap: 10,
   },
   itemControls: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 10,
     borderWidth: 1,

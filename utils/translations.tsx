@@ -1,3 +1,4 @@
+import { observe } from "@legendapp/state";
 import { settings } from "./store";
 
 const _translations = {
@@ -29,4 +30,8 @@ const _translations = {
   },
 };
 
-export const translations = _translations[settings.get().language];
+export let translations = _translations[settings.get().language];
+
+observe(() => {
+  translations = _translations[settings.get().language];
+});

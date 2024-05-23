@@ -1,10 +1,4 @@
-import {
-  I18nManager,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Item } from "@/models/item";
 import { useEffect, useReducer, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,7 +8,10 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { Text } from "@/components/ui/Text";
+import { TextInput } from "@/components/ui/TextInput";
+
 import { translations } from "@/utils/translations";
+import { settings } from "@/utils/store";
 
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
@@ -230,7 +227,14 @@ const ItemForm = ({
           />
         </TouchableOpacity>
       )}
-      <View style={styles.buttons}>
+      <View
+        style={[
+          styles.buttons,
+          {
+            flexDirection: "row",
+          },
+        ]}
+      >
         {deleteAble && (
           <TouchableOpacity
             style={[
@@ -290,7 +294,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     display: "flex",
-    textAlign: "left",
   },
   input: {
     width: "100%",
@@ -298,10 +301,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
     fontSize: 18,
-    textAlign: I18nManager.isRTL ? "right" : "left",
   },
   buttons: {
-    flexDirection: "row-reverse",
     gap: 10,
   },
   addButton: {

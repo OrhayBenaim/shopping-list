@@ -10,9 +10,12 @@ import { BackHandler, I18nManager } from "react-native";
 import theme from "@/utils/theme";
 import AppLayout from "@/components/AppLayout";
 import { CameraProvider } from "@/components/Camera";
+import { observer } from "@legendapp/state/react";
 import { settings } from "@/utils/store";
 
-I18nManager.forceRTL(settings.get().language === "he");
+I18nManager.allowRTL(false);
+I18nManager.forceRTL(false);
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -60,9 +63,10 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function RootLayoutNav() {
+const RootLayoutNav = observer(() => {
+  const lang = settings.get().language;
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} key={lang}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <CameraProvider>
           <PopupProvider>
@@ -72,4 +76,4 @@ function RootLayoutNav() {
       </GestureHandlerRootView>
     </ThemeProvider>
   );
-}
+});

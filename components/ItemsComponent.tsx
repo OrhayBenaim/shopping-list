@@ -3,6 +3,7 @@ import { observer } from "@legendapp/state/react";
 import { Item } from "@/models/item";
 import ItemComponent from "./Item";
 import { Text } from "@/components/ui/Text";
+import { settings } from "@/utils/store";
 
 interface Props {
   items: Item[];
@@ -23,7 +24,7 @@ const ItemsComponent = observer(
   }: Props) => {
     return (
       <View key={category}>
-        <Text style={styles.category}>{category}</Text>
+        <Text>{category}</Text>
         {items.map((item) => (
           <ItemComponent
             onItemPress={onItemPress}
@@ -39,8 +40,3 @@ const ItemsComponent = observer(
   }
 );
 export default ItemsComponent;
-const styles = StyleSheet.create({
-  category: {
-    textAlign: "left",
-  },
-});

@@ -5,12 +5,16 @@ import { Item } from "@/models/item";
 
 export const state = observable<Item[]>([]);
 
+type Lang = "en" | "he";
+
 export const settings = observable<{
   endpoint?: string;
-  language: "en" | "he";
+  language: Lang;
+  isRTL: boolean;
 }>({
   endpoint: undefined,
   language: "en",
+  isRTL: false,
 });
 
 export const snapshot = observable<(Item | undefined)[]>([]);
@@ -147,4 +151,12 @@ export const ItemsByCategories = (items: Item[]) => {
     acc[key].push(current);
     return acc;
   }, {} as { [key: string]: Item[] });
+};
+
+export const SetLanguage = (language: Lang) => {
+  settings.set((sett) => ({
+    ...sett,
+    language,
+    isRTL: language === "he",
+  }));
 };

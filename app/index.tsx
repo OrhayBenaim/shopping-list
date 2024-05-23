@@ -1,12 +1,9 @@
 import {
   Dimensions,
-  I18nManager,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
 } from "react-native";
 import { observer } from "@legendapp/state/react";
 import {
@@ -18,9 +15,10 @@ import {
   GetItems,
   IncreaseQuantity,
   ItemsByCategories,
+  SetLanguage,
   onDelete,
   onUpdate,
-  state,
+  settings,
 } from "@/utils/store";
 import { type Item } from "@/models/item";
 import { useState } from "react";
@@ -29,6 +27,7 @@ import ItemForm from "@/components/ItemForm";
 import Categories from "@/components/Categories";
 import ItemsComponent from "@/components/ItemsComponent";
 import { translations } from "@/utils/translations";
+import { TextInput } from "@/components/ui/TextInput";
 
 const WIDTH = Dimensions.get("window").width;
 
@@ -106,6 +105,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#f4f4f4",
     fontSize: 18,
-    textAlign: I18nManager.isRTL ? "right" : "left",
   },
 });
