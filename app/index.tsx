@@ -2,8 +2,8 @@ import {
   Dimensions,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { observer } from "@legendapp/state/react";
 import {
@@ -15,10 +15,8 @@ import {
   GetItems,
   IncreaseQuantity,
   ItemsByCategories,
-  SetLanguage,
   onDelete,
   onUpdate,
-  settings,
 } from "@/utils/store";
 import { type Item } from "@/models/item";
 import { useState } from "react";
@@ -28,11 +26,15 @@ import Categories from "@/components/Categories";
 import ItemsComponent from "@/components/ItemsComponent";
 import { translations } from "@/utils/translations";
 import { TextInput } from "@/components/ui/TextInput";
+import { useNavigation } from "expo-router";
+import { DrawerActions } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 const WIDTH = Dimensions.get("window").width;
 
 const Home = observer(() => {
   const [search, setSearch] = useState("");
+  const navigation = useNavigation();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const { setContent, setOpen } = usePopup();
@@ -66,11 +68,22 @@ const Home = observer(() => {
 
   return (
     <ScrollView style={styles.container}>
-      <TextInput
-        onChangeText={(value) => setSearch(value)}
-        style={styles.input}
-        placeholder={translations.search}
-      />
+      <View style={styles.searchContainer}>
+        <TextInput
+          onChangeText={(value) => setSearch(value)}
+          style={styles.input}
+          placeholder={translations.search}
+        />
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(DrawerActions.openDrawer());
+          }}
+        >
+          <Ionicons size={30} name="menu-outline" />
+        </TouchableOpacity>
+      </View>
+
       <Categories
         categories={GetCategories()}
         onCategoriesChange={setSelectedCategories}
@@ -97,11 +110,15 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     width: WIDTH,
   },
-
-  input: {
-    width: "100%",
-    padding: 10,
+  searchContainer: {
+    gap: 10,
+    flexDirection: "row-reverse",
+    alignItems: "center",
     marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    padding: 10,
     borderRadius: 10,
     backgroundColor: "#f4f4f4",
     fontSize: 18,

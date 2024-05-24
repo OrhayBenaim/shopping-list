@@ -14,6 +14,11 @@ const _translations = {
     missingThreshold: "Missing threshold",
     delete: "Delete",
     save: "Save",
+    settings: "Settings",
+    home: "Home",
+    missingItems: "Missing items",
+    english: "English",
+    hebrew: "Hebrew",
   },
   he: {
     search: "חיפוש",
@@ -27,6 +32,11 @@ const _translations = {
     missingThreshold: "כמות לקנייה",
     delete: "מחק",
     save: "שמור",
+    settings: "הגדרות",
+    home: "בית",
+    missingItems: "פריטים חסרים",
+    english: "אנגלית",
+    hebrew: "עברית",
   },
 };
 

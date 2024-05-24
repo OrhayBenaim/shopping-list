@@ -76,6 +76,7 @@ export function Nav() {
     );
   };
 
+  if (INDICATOR_POSITIONS[pathname] === undefined) return null;
   return (
     <View style={styles.container}>
       <Svg fill="none" style={styles.svg} viewBox="0 0 360 85">
