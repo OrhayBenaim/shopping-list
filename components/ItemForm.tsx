@@ -119,6 +119,14 @@ const ItemForm = ({
     );
   }
 
+  const onItemSubmit = () => {
+    onSubmit({
+      ...state,
+      name: state.name.trim(),
+      category: state.category.trim(),
+    });
+  };
+
   return (
     <View style={styles.container}>
       {!hiddenFields.includes("name") && (
@@ -132,7 +140,10 @@ const ItemForm = ({
           ]}
           value={state.name}
           onChange={(e) => {
-            dispatch({ type: "updateName", payload: e.nativeEvent.text });
+            dispatch({
+              type: "updateName",
+              payload: e.nativeEvent.text,
+            });
           }}
           defaultValue={item.name}
         />
@@ -148,7 +159,10 @@ const ItemForm = ({
           ]}
           value={state.category}
           onChange={(e) => {
-            dispatch({ type: "updateCategory", payload: e.nativeEvent.text });
+            dispatch({
+              type: "updateCategory",
+              payload: e.nativeEvent.text,
+            });
           }}
           defaultValue={item.category}
         />
@@ -254,7 +268,7 @@ const ItemForm = ({
               backgroundColor: theme.colors.primaryAction,
             },
           ]}
-          onPress={() => onSubmit(state)}
+          onPress={onItemSubmit}
         >
           <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
             {translations.save}

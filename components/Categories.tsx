@@ -35,15 +35,17 @@ const Categories = observer(
           },
         ]}
       >
-        {categories.map((category) => (
-          <Tag
-            label={category}
-            key={category}
-            onPress={() => {
-              onCategoryToggle(category);
-            }}
-          />
-        ))}
+        {categories
+          .filter((cat) => cat)
+          .map((category) => (
+            <Tag
+              label={category}
+              key={category}
+              onPress={() => {
+                onCategoryToggle(category);
+              }}
+            />
+          ))}
       </ScrollView>
     );
   }
