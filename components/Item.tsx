@@ -1,7 +1,6 @@
 import {
   GestureResponderEvent,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -13,6 +12,7 @@ import { usePopup } from "./Popup";
 import { Image } from "expo-image";
 import { Text } from "@/components/ui/Text";
 import { settings } from "@/utils/store";
+import { TextInput } from "@/components/ui/TextInput";
 
 interface Props {
   item: Item;

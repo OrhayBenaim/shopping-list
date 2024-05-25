@@ -11,7 +11,6 @@ import { Text } from "@/components/ui/Text";
 import { TextInput } from "@/components/ui/TextInput";
 
 import { translations } from "@/utils/translations";
-import { settings } from "@/utils/store";
 
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
@@ -123,77 +122,73 @@ const ItemForm = ({
   return (
     <View style={styles.container}>
       {!hiddenFields.includes("name") && (
-        <>
-          <Text style={styles.label}>{translations.name}</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: theme.colors.mainBackground,
-              },
-            ]}
-            onEndEditing={(e) => {
-              dispatch({ type: "updateName", payload: e.nativeEvent.text });
-            }}
-            defaultValue={item.name}
-          />
-        </>
+        <TextInput
+          label={translations.name}
+          style={[
+            styles.input,
+            {
+              backgroundColor: theme.colors.mainBackground,
+            },
+          ]}
+          value={state.name}
+          onChange={(e) => {
+            dispatch({ type: "updateName", payload: e.nativeEvent.text });
+          }}
+          defaultValue={item.name}
+        />
       )}
       {!hiddenFields.includes("category") && (
-        <>
-          <Text style={styles.label}>{translations.category}</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: theme.colors.mainBackground,
-              },
-            ]}
-            onEndEditing={(e) => {
-              dispatch({ type: "updateCategory", payload: e.nativeEvent.text });
-            }}
-            defaultValue={item.category}
-          />
-        </>
+        <TextInput
+          label={translations.category}
+          style={[
+            styles.input,
+            {
+              backgroundColor: theme.colors.mainBackground,
+            },
+          ]}
+          value={state.category}
+          onChange={(e) => {
+            dispatch({ type: "updateCategory", payload: e.nativeEvent.text });
+          }}
+          defaultValue={item.category}
+        />
       )}
       {!hiddenFields.includes("quantity") && (
-        <>
-          <Text style={styles.label}>{translations.quantity}</Text>
-          <TextInput
-            keyboardType="numeric"
-            style={[
-              styles.input,
-              {
-                backgroundColor: theme.colors.mainBackground,
-              },
-            ]}
-            onEndEditing={(e) => {
-              dispatch({ type: "updateQuantity", payload: e.nativeEvent.text });
-            }}
-            defaultValue={item.quantity.toString()}
-          />
-        </>
+        <TextInput
+          label={translations.quantity}
+          keyboardType="numeric"
+          style={[
+            styles.input,
+            {
+              backgroundColor: theme.colors.mainBackground,
+            },
+          ]}
+          value={state.quantity.toString()}
+          onChange={(e) => {
+            dispatch({ type: "updateQuantity", payload: e.nativeEvent.text });
+          }}
+          defaultValue={item.quantity.toString()}
+        />
       )}
       {!hiddenFields.includes("missingThreshold") && (
-        <>
-          <Text style={styles.label}>{translations.missingThreshold}</Text>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: theme.colors.mainBackground,
-              },
-            ]}
-            keyboardType="numeric"
-            onEndEditing={(e) => {
-              dispatch({
-                type: "updateMissingThreshold",
-                payload: e.nativeEvent.text,
-              });
-            }}
-            defaultValue={item.missingThreshold.toString()}
-          />
-        </>
+        <TextInput
+          label={translations.missingThreshold}
+          style={[
+            styles.input,
+            {
+              backgroundColor: theme.colors.mainBackground,
+            },
+          ]}
+          keyboardType="numeric"
+          value={state.missingThreshold.toString()}
+          onChange={(e) => {
+            dispatch({
+              type: "updateMissingThreshold",
+              payload: e.nativeEvent.text,
+            });
+          }}
+          defaultValue={item.missingThreshold.toString()}
+        />
       )}
       {!hiddenFields.includes("camera") && (
         <TouchableOpacity
@@ -289,11 +284,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    display: "flex",
   },
   input: {
     width: "100%",
