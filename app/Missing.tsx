@@ -63,6 +63,7 @@ const Missing = observer(() => {
           onChangeText={(value) => setSearch(value)}
           style={styles.input}
           placeholder={translations.search}
+          containerStyles={{ flex: 1 }}
         />
 
         <TouchableOpacity

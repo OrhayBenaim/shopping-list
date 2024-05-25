@@ -23,8 +23,15 @@ export const TextInput = observer((props: TextInputProps) => {
   const propsStyle = useMemo(() => {
     return Array.isArray(props.style) ? props.style : [props.style];
   }, [props.style]);
+
+  const containerStyles = useMemo(() => {
+    return Array.isArray(props.containerStyles)
+      ? props.containerStyles
+      : [props.containerStyles];
+  }, [props.containerStyles]);
+
   return (
-    <View style={props.containerStyles}>
+    <View style={containerStyles}>
       {props.label && <Text style={styles.label}>{props.label}</Text>}
       <ReactTextInput
         {...props}
