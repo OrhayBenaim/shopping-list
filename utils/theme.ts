@@ -8,6 +8,7 @@ const palette = {
   bluePrimary: "#0077BD",
   white: "#FFFFFF",
   red: "#c63535",
+  disable: "#BDBDBD",
 };
 
 const theme = createTheme({
@@ -20,6 +21,7 @@ const theme = createTheme({
     border: palette.border,
     dangerAction: palette.red,
     lightText: palette.white,
+    disable: palette.disable,
   },
   spacing: {
     s: 8,

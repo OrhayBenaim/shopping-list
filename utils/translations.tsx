@@ -19,6 +19,8 @@ const _translations = {
     missingItems: "Missing items",
     english: "English",
     hebrew: "Hebrew",
+
+    requiredField: "This field is required",
   },
   he: {
     search: "חיפוש",
@@ -37,6 +39,8 @@ const _translations = {
     missingItems: "פריטים חסרים",
     english: "אנגלית",
     hebrew: "עברית",
+
+    requiredField: "שדה חובה",
   },
 };
 

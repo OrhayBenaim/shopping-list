@@ -9,8 +9,10 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { Text } from "@/components/ui/Text";
 import { TextInput } from "@/components/ui/TextInput";
+import { useForm, Controller } from "react-hook-form";
 
 import { translations } from "@/utils/translations";
+import { useLatch } from "@/hooks/useLatch";
 
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
@@ -31,6 +33,21 @@ const ItemForm = ({
   const [mediaSelection, setMediaSelection] = useState(false);
   const camera = useCamera();
   const theme = useTheme();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, isDirty },
+  } = useForm({
+    resetOptions: {
+      keepDirty: true,
+      keepTouched: true,
+      keepDirtyValues: true,
+    },
+    defaultValues: { ...item },
+  });
+
+  const latchedDirty = useLatch(isDirty, true);
 
   useEffect(() => {
     if (camera.uri) {
@@ -119,89 +136,109 @@ const ItemForm = ({
     );
   }
 
-  const onItemSubmit = () => {
+  const onItemSubmit = (data: Item) => {
     onSubmit({
-      ...state,
-      name: state.name.trim(),
-      category: state.category.trim(),
+      ...data,
+      name: data.name.trim(),
+      category: data.category.trim(),
     });
   };
 
   return (
     <View style={styles.container}>
       {!hiddenFields.includes("name") && (
-        <TextInput
-          label={translations.name}
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.mainBackground,
-            },
-          ]}
-          value={state.name}
-          onChange={(e) => {
-            dispatch({
-              type: "updateName",
-              payload: e.nativeEvent.text,
-            });
-          }}
-          defaultValue={item.name}
+        <Controller
+          control={control}
+          name="name"
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              containerStyles={styles.containerInput}
+              label={translations.name}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: theme.colors.mainBackground,
+                },
+              ]}
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              error={value.length === 0 && latchedDirty}
+              errorText={translations.requiredField}
+            />
+          )}
         />
       )}
       {!hiddenFields.includes("category") && (
-        <TextInput
-          label={translations.category}
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.mainBackground,
-            },
-          ]}
-          value={state.category}
-          onChange={(e) => {
-            dispatch({
-              type: "updateCategory",
-              payload: e.nativeEvent.text,
-            });
-          }}
-          defaultValue={item.category}
+        <Controller
+          control={control}
+          name="category"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              containerStyles={styles.containerInput}
+              label={translations.category}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: theme.colors.mainBackground,
+                },
+              ]}
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+            />
+          )}
         />
       )}
       {!hiddenFields.includes("quantity") && (
-        <TextInput
-          label={translations.quantity}
-          keyboardType="numeric"
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.mainBackground,
-            },
-          ]}
-          value={state.quantity.toString()}
-          onChange={(e) => {
-            dispatch({ type: "updateQuantity", payload: e.nativeEvent.text });
-          }}
-          defaultValue={item.quantity.toString()}
+        <Controller
+          control={control}
+          name="quantity"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              containerStyles={styles.containerInput}
+              label={translations.quantity}
+              keyboardType="numeric"
+              style={[
+                styles.input,
+                {
+                  backgroundColor: theme.colors.mainBackground,
+                },
+              ]}
+              value={value.toString()}
+              onChangeText={(e) => {
+                const quantity = parseFloat(e);
+                onChange(quantity >= 0 ? quantity : 0);
+              }}
+              onBlur={onBlur}
+            />
+          )}
         />
       )}
       {!hiddenFields.includes("missingThreshold") && (
-        <TextInput
-          label={translations.missingThreshold}
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.mainBackground,
-            },
-          ]}
-          keyboardType="numeric"
-          value={state.missingThreshold.toString()}
-          onChange={(e) => {
-            dispatch({
-              type: "updateMissingThreshold",
-              payload: e.nativeEvent.text,
-            });
-          }}
-          defaultValue={item.missingThreshold.toString()}
+        <Controller
+          control={control}
+          name="missingThreshold"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              containerStyles={styles.containerInput}
+              label={translations.missingThreshold}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: theme.colors.mainBackground,
+                },
+              ]}
+              keyboardType="numeric"
+              value={value.toString()}
+              onChangeText={(e) => {
+                const quantity = parseFloat(e);
+                onChange(quantity >= 0 ? quantity : 0);
+              }}
+              onBlur={onBlur}
+            />
+          )}
         />
       )}
       {!hiddenFields.includes("camera") && (
@@ -264,11 +301,16 @@ const ItemForm = ({
         <TouchableOpacity
           style={[
             styles.addButton,
-            {
-              backgroundColor: theme.colors.primaryAction,
-            },
+            isValid
+              ? {
+                  backgroundColor: theme.colors.primaryAction,
+                }
+              : {
+                  backgroundColor: theme.colors.disable,
+                },
           ]}
-          onPress={onItemSubmit}
+          disabled={!isValid}
+          onPress={handleSubmit(onItemSubmit)}
         >
           <Text style={[styles.buttonText, { color: theme.colors.lightText }]}>
             {translations.save}
@@ -302,9 +344,11 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     padding: 10,
-    marginBottom: 20,
     borderRadius: 10,
     fontSize: 18,
+  },
+  containerInput: {
+    marginBottom: 20,
   },
   buttons: {
     gap: 10,
