@@ -12,40 +12,47 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { SetLanguage, settings } from "@/utils/store";
 import { translations } from "@/utils/translations";
+import * as Application from "expo-application";
+
 const WIDTH = Dimensions.get("window").width;
 
 const Settings = observer(() => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(DrawerActions.openDrawer());
-          }}
-        >
-          <Ionicons size={30} name="menu-outline" />
-        </TouchableOpacity>
+    <View style={StyleSheet.absoluteFill}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.dispatch(DrawerActions.openDrawer());
+            }}
+          >
+            <Ionicons size={30} name="menu-outline" />
+          </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>{translations.settings}</Text>
-        <Ionicons
-          size={30}
-          name="menu-outline"
-          style={{ color: "transparent" }}
-        />
-      </View>
+          <Text style={styles.headerTitle}>{translations.settings}</Text>
+          <Ionicons
+            size={30}
+            name="menu-outline"
+            style={{ color: "transparent" }}
+          />
+        </View>
 
-      <View>
-        <Picker
-          selectedValue={settings.get().language}
-          onValueChange={(itemValue) => SetLanguage(itemValue)}
-        >
-          <Picker.Item label={translations.english} value="en" />
-          <Picker.Item label={translations.hebrew} value="he" />
-        </Picker>
-      </View>
-    </ScrollView>
+        <View>
+          <Picker
+            selectedValue={settings.get().language}
+            onValueChange={(itemValue) => SetLanguage(itemValue)}
+          >
+            <Picker.Item label={translations.english} value="en" />
+            <Picker.Item label={translations.hebrew} value="he" />
+          </Picker>
+        </View>
+      </ScrollView>
+      <Text style={styles.version}>
+        V{Application.nativeApplicationVersion}
+      </Text>
+    </View>
   );
 });
 
@@ -67,5 +74,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginHorizontal: "auto",
+  },
+  version: {
+    alignSelf: "flex-end",
+    padding: 10,
   },
 });
