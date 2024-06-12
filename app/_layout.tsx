@@ -2,11 +2,11 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import "react-native-gesture-handler";
 import { PopupProvider } from "@/components/Popup";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BackHandler, I18nManager } from "react-native";
+import { BackHandler, I18nManager, View, StyleSheet } from "react-native";
 import theme from "@/utils/theme";
 import AppLayout from "@/components/AppLayout";
 import { CameraProvider } from "@/components/Camera";
@@ -15,6 +15,7 @@ import { settings } from "@/utils/store";
 
 I18nManager.allowRTL(false);
 I18nManager.forceRTL(false);
+SplashScreen.preventAutoHideAsync();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -34,17 +35,6 @@ export default function RootLayout() {
     ...Ionicons.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -56,11 +46,21 @@ export default function RootLayout() {
     return () => backHandler.remove();
   }, []);
 
-  if (!loaded) {
+  const onLayoutRootView = useCallback(async () => {
+    if (loaded || error) {
+      await SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <View onLayout={onLayoutRootView} style={StyleSheet.absoluteFill}>
+      <RootLayoutNav />
+    </View>
+  );
 }
 
 const RootLayoutNav = observer(() => {

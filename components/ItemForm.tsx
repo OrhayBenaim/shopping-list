@@ -15,6 +15,8 @@ import { translations } from "@/utils/translations";
 import { useLatch } from "@/hooks/useLatch";
 import { clamp, safeParseFloat } from "@/utils/helpers";
 
+const MAX_QUANTITY = 99;
+const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
   item: Item;
@@ -219,11 +221,13 @@ const ItemForm = ({
               ]}
               value={value}
               onChangeText={(value) => {
-                if (/[-,]/.test(value)) return;
+                if (IGNORED_QUANTITY_KEYS.test(value)) return;
                 onChange(value);
               }}
               onBlur={() => {
-                onChange(clamp(safeParseFloat(value), 0, 999).toString());
+                onChange(
+                  clamp(safeParseFloat(value), 0, MAX_QUANTITY).toString()
+                );
                 onBlur();
               }}
             />
@@ -247,11 +251,13 @@ const ItemForm = ({
               keyboardType="numeric"
               value={value}
               onChangeText={(value) => {
-                if (/[-,]/.test(value)) return;
+                if (IGNORED_QUANTITY_KEYS.test(value)) return;
                 onChange(value);
               }}
               onBlur={() => {
-                onChange(clamp(safeParseFloat(value), 0, 999).toString());
+                onChange(
+                  clamp(safeParseFloat(value), 0, MAX_QUANTITY).toString()
+                );
                 onBlur();
               }}
             />
