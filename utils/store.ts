@@ -118,8 +118,8 @@ export const onInsert = (item: Item) => {
   state.set((items) => [...items, item]);
 };
 
-export const onDelete = (item: Item) => {
-  state.set((items) => items.filter((i) => i.id !== item.id));
+export const onDelete = (itemId: string) => {
+  state.set((items) => items.filter((i) => i.id !== itemId));
 };
 
 export const onUpdate = (item: Item) => {

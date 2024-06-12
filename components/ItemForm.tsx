@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Item } from "@/models/item";
-import { useEffect, useReducer, useState } from "react";
+import { FormItem, Item } from "@/models/item";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme";
 import { useCamera } from "./Camera";
@@ -13,6 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 
 import { translations } from "@/utils/translations";
 import { useLatch } from "@/hooks/useLatch";
+import { clamp, safeParseFloat } from "@/utils/helpers";
 
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
@@ -20,7 +21,7 @@ interface Props {
   onSubmit: (item: Item) => void;
   hiddenFields?: fields[];
   deleteAble?: boolean;
-  onDelete?: (item: Item) => void;
+  onDelete?: (itemId: string) => void;
 }
 const ItemForm = ({
   item,
@@ -29,7 +30,15 @@ const ItemForm = ({
   onDelete,
   deleteAble = false,
 }: Props) => {
-  const [state, dispatch] = useReducer(reducer, item);
+  const formItem = useMemo(
+    () => ({
+      ...item,
+      quantity: item.quantity.toString(),
+      missingThreshold: item.missingThreshold.toString(),
+    }),
+    [item]
+  );
+  const [state, dispatch] = useReducer(reducer, formItem);
   const [mediaSelection, setMediaSelection] = useState(false);
   const camera = useCamera();
   const theme = useTheme();
@@ -44,7 +53,7 @@ const ItemForm = ({
       keepTouched: true,
       keepDirtyValues: true,
     },
-    defaultValues: { ...item },
+    defaultValues: { ...formItem },
   });
 
   const latchedDirty = useLatch(isDirty, true);
@@ -59,7 +68,7 @@ const ItemForm = ({
 
   const onDeletePress = () => {
     if (onDelete) {
-      onDelete(state);
+      onDelete(state.id);
     }
   };
 
@@ -136,9 +145,11 @@ const ItemForm = ({
     );
   }
 
-  const onItemSubmit = (data: Item) => {
+  const onItemSubmit = (data: FormItem) => {
     onSubmit({
       ...data,
+      quantity: safeParseFloat(data.quantity),
+      missingThreshold: safeParseFloat(data.missingThreshold),
       name: data.name.trim(),
       category: data.category.trim(),
     });
@@ -206,12 +217,15 @@ const ItemForm = ({
                   backgroundColor: theme.colors.mainBackground,
                 },
               ]}
-              value={value.toString()}
-              onChangeText={(e) => {
-                const quantity = parseFloat(e);
-                onChange(quantity >= 0 ? quantity : 0);
+              value={value}
+              onChangeText={(value) => {
+                if (/[-,]/.test(value)) return;
+                onChange(value);
               }}
-              onBlur={onBlur}
+              onBlur={() => {
+                onChange(clamp(safeParseFloat(value), 0, 999).toString());
+                onBlur();
+              }}
             />
           )}
         />
@@ -231,12 +245,15 @@ const ItemForm = ({
                 },
               ]}
               keyboardType="numeric"
-              value={value.toString()}
-              onChangeText={(e) => {
-                const quantity = parseFloat(e);
-                onChange(quantity >= 0 ? quantity : 0);
+              value={value}
+              onChangeText={(value) => {
+                if (/[-,]/.test(value)) return;
+                onChange(value);
               }}
-              onBlur={onBlur}
+              onBlur={() => {
+                onChange(clamp(safeParseFloat(value), 0, 999).toString());
+                onBlur();
+              }}
             />
           )}
         />
@@ -380,18 +397,16 @@ type Action = {
   payload: string;
 };
 
-function reducer(state: Item, action: Action): Item {
+function reducer(state: FormItem, action: Action): FormItem {
   switch (action.type) {
     case "updateQuantity":
-      const quantity = parseFloat(action.payload);
-      return { ...state, quantity: quantity >= 0 ? quantity : 0 };
+      return { ...state, quantity: action.payload };
     case "updateCategory":
       return { ...state, category: action.payload };
     case "updateMissingThreshold":
-      const missingThreshold = parseFloat(action.payload);
       return {
         ...state,
-        missingThreshold: missingThreshold >= 0 ? missingThreshold : 0,
+        missingThreshold: action.payload,
       };
     case "updateName":
       return { ...state, name: action.payload };

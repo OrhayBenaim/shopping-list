@@ -18,10 +18,10 @@ import Animated, {
 import { useLayoutEffect } from "react";
 import { usePopup } from "./Popup";
 import ItemForm from "./ItemForm";
-import { v4 as uuidv4 } from "uuid";
 import { onInsert } from "@/utils/store";
 import { Item } from "@/models/item";
 import { useTheme } from "@/utils/theme";
+import * as Crypto from "expo-crypto";
 
 const WIDTH = Dimensions.get("window").width;
 const ADD_BUTTON_SIZE = WIDTH / 4;
@@ -68,7 +68,7 @@ export function Nav() {
           quantity: 0,
           missingThreshold: 0,
           missing: true,
-          id: uuidv4(),
+          id: Crypto.randomUUID(),
           updatedAt: new Date().getTime(),
         }}
         onSubmit={onInsertItem}

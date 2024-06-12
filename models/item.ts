@@ -8,3 +8,8 @@ export type Item = {
   updatedAt: number;
   image?: string;
 };
+
+export type FormItem = Omit<Item, "quantity" | "missingThreshold"> & {
+  quantity: string;
+  missingThreshold: string;
+};

@@ -50,8 +50,8 @@ const Home = observer(() => {
     onUpdate(item);
   };
 
-  const onItemDelete = (item: Item) => {
-    onDelete(item);
+  const onItemDelete = (itemId: string) => {
+    onDelete(itemId);
     setOpen(false);
   };
 
