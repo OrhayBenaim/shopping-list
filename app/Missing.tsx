@@ -15,7 +15,7 @@ import {
   onUpdate,
 } from "@/utils/store";
 import type { Item } from "@/models/item";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { usePopup } from "@/components/Popup";
 import ItemForm from "@/components/ItemForm";
 import ItemsComponent from "@/components/ItemsComponent";
@@ -39,6 +39,12 @@ const Missing = observer(() => {
   );
 
   const itemsByCategories = ItemsByCategories(filteredItems);
+
+  const sortedCategories = useMemo(() => {
+    return Object.entries(itemsByCategories).sort(([a], [b]) =>
+      a.localeCompare(b)
+    );
+  }, [itemsByCategories]);
 
   const onItemPopupSave = (item: Item) => {
     setOpen(false);
@@ -78,7 +84,7 @@ const Missing = observer(() => {
         categories={GetMissingCategories()}
         onCategoriesChange={setSelectedCategories}
       />
-      {Object.entries(itemsByCategories).map(([category, items]) => (
+      {sortedCategories.map(([category, items]) => (
         <ItemsComponent
           onItemPress={onItemPress}
           key={category}

@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { FormItem, Item } from "@/models/item";
+import { FormItem, Item, MAX_QUANTITY } from "@/models/item";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/utils/theme";
@@ -15,7 +15,6 @@ import { translations } from "@/utils/translations";
 import { useLatch } from "@/hooks/useLatch";
 import { clamp, safeParseFloat } from "@/utils/helpers";
 
-const MAX_QUANTITY = 99;
 const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {

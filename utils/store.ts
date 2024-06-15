@@ -1,7 +1,8 @@
 import { observable } from "@legendapp/state";
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 import { persistObservable } from "@legendapp/state/persist";
-import { Item } from "@/models/item";
+import { Item, MAX_QUANTITY } from "@/models/item";
+import { clamp, safeParseFloat } from "./helpers";
 
 export const state = observable<Item[]>([]);
 
@@ -85,7 +86,7 @@ persistObservable(state, {
 });
 
 export const GetItems = () => {
-  return state.get();
+  return state.get().sort((a, b) => a.name.localeCompare(b.name));
 };
 export const GetMissingItems = () => {
   return GetItems().filter((item) => item.missing);
@@ -129,7 +130,9 @@ export const onUpdate = (item: Item) => {
 };
 
 export const IncreaseQuantity = (item: Item) => {
-  onUpdate({ ...item, quantity: item.quantity + 1 });
+  if (item.quantity + 1 <= MAX_QUANTITY) {
+    onUpdate({ ...item, quantity: item.quantity + 1 });
+  }
 };
 
 export const DecreaseQuantity = (item: Item) => {
@@ -139,8 +142,8 @@ export const DecreaseQuantity = (item: Item) => {
 };
 
 export const ChangeQuantity = (item: Item, quantity: string) => {
-  const parsedQuantity = parseFloat(quantity);
-  onUpdate({ ...item, quantity: parsedQuantity >= 0 ? parsedQuantity : 0 });
+  const parsedQuantity = clamp(safeParseFloat(quantity), 0, MAX_QUANTITY);
+  onUpdate({ ...item, quantity: parsedQuantity });
 };
 
 export const ItemsByCategories = (items: Item[]) => {
