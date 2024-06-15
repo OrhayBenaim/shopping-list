@@ -62,7 +62,7 @@ const ItemForm = ({
   useEffect(() => {
     if (camera.uri) {
       setMediaSelection(false);
-      dispatch({ type: "updateImage", payload: camera.uri });
+      // dispatch({ type: "updateImage", payload: camera.uri });
       saveLocalImage(camera.uri);
     }
   }, [camera.uri]);
@@ -97,7 +97,6 @@ const ItemForm = ({
 
     if (!result.canceled) {
       setMediaSelection(false);
-      dispatch({ type: "updateImage", payload: result.assets[0].uri });
       saveLocalImage(result.assets[0].uri);
     }
   };
@@ -149,6 +148,7 @@ const ItemForm = ({
   const onItemSubmit = (data: FormItem) => {
     onSubmit({
       ...data,
+      image: state.image,
       quantity: safeParseFloat(data.quantity),
       missingThreshold: safeParseFloat(data.missingThreshold),
       name: data.name.trim(),
