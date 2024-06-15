@@ -21,6 +21,11 @@ const _translations = {
     hebrew: "Hebrew",
 
     requiredField: "This field is required",
+
+    exitApp: "Exit App",
+    exitAppQuestion: "Exiting the application?",
+    exitAppCancel: "Cancel",
+    exitAppOk: "OK",
   },
   he: {
     search: "חיפוש",
@@ -41,6 +46,11 @@ const _translations = {
     hebrew: "עברית",
 
     requiredField: "שדה חובה",
+
+    exitApp: "יציאה מהאפליקציה",
+    exitAppQuestion: "לצאת מהאפליקציה?",
+    exitAppCancel: "ביטול",
+    exitAppOk: "אישור",
   },
 };
 

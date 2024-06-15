@@ -6,12 +6,20 @@ import { useCallback, useEffect } from "react";
 import "react-native-gesture-handler";
 import { PopupProvider } from "@/components/Popup";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BackHandler, I18nManager, View, StyleSheet } from "react-native";
+import {
+  BackHandler,
+  I18nManager,
+  View,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import theme from "@/utils/theme";
 import AppLayout from "@/components/AppLayout";
 import { CameraProvider } from "@/components/Camera";
 import { observer } from "@legendapp/state/react";
 import { settings } from "@/utils/store";
+import { useNavigation } from "expo-router";
+import { translations } from "@/utils/translations";
 
 I18nManager.allowRTL(false);
 I18nManager.forceRTL(false);
@@ -31,6 +39,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const navigation = useNavigation();
   const [loaded, error] = useFonts({
     ...Ionicons.font,
   });
@@ -39,6 +48,27 @@ export default function RootLayout() {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
+        if (navigation.canGoBack()) {
+          return false;
+        }
+        Alert.alert(
+          translations.exitApp,
+          translations.exitAppQuestion,
+          [
+            {
+              text: translations.exitAppCancel,
+              style: "cancel",
+            },
+            {
+              text: translations.exitAppOk,
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          {
+            cancelable: false,
+          }
+        );
+
         return true;
       }
     );

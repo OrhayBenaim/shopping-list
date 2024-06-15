@@ -35,8 +35,18 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [snapPoints, setSnapPoints] = React.useState([DEFAULT_SNAP_POINT]);
   const [content, _setContent] = React.useState<React.ReactNode>(undefined);
   const theme = useTheme();
+  const [open, setPopupOpen] = React.useState(false);
   // ref
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
+
+  const setOpen = (open: boolean) => {
+    setPopupOpen(open);
+    if (open) {
+      bottomSheetModalRef.current?.present();
+    } else {
+      bottomSheetModalRef.current?.dismiss();
+    }
+  };
 
   const onSetContent = (c: ReactNode, snapPoint?: string) => {
     _setContent(c);
@@ -46,27 +56,23 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
       setSnapPoints([DEFAULT_SNAP_POINT]);
     }
 
-    bottomSheetModalRef.current?.present();
-  };
-  const setOpen = (open: boolean) => {
-    if (open) {
-      bottomSheetModalRef.current?.present();
-    } else {
-      bottomSheetModalRef.current?.dismiss();
-    }
+    setOpen(true);
   };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        setOpen(false);
-        return true;
+        if (open) {
+          setOpen(false);
+          return true;
+        }
+        return false;
       }
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [open]);
 
   return (
     <PopupContext.Provider value={{ setOpen, setContent: onSetContent }}>
