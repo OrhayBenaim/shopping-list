@@ -1,11 +1,12 @@
 import React, { ReactNode, useEffect } from "react";
-import { BackHandler, StyleSheet } from "react-native";
+import { BackHandler, StyleSheet, View } from "react-native";
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@/utils/theme";
+import AnimatedBackdrop from "./ui/AnimatedBackdrop";
 
 type PopupStoreType = {
   setOpen: (open: boolean) => void;
@@ -73,6 +74,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
         {children}
 
         <BottomSheetModal
+          backdropComponent={() => <AnimatedBackdrop />}
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
