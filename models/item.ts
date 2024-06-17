@@ -14,4 +14,4 @@ export type FormItem = Omit<Item, "quantity" | "missingThreshold"> & {
   missingThreshold: string;
 };
 
-export const MAX_QUANTITY = 99 as const;
+export const MAX_QUANTITY = 999 as const;
