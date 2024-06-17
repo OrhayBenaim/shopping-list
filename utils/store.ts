@@ -100,7 +100,9 @@ export const FilteredItemsByCategories = (
   return items.filter((item) => categories.includes(item.category));
 };
 export const FilteredItemsByName = (items: Item[], name: string) => {
-  return items.filter((item) => item.name.includes(name));
+  return items.filter((item) =>
+    item.name.toLowerCase().includes(name.toLowerCase())
+  );
 };
 
 export const GetCategories = () => {
