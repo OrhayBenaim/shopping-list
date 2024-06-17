@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 import Tag from "@/components/ui/Tag";
-import { ScrollView } from "react-native-gesture-handler";
 import { observer } from "@legendapp/state/react";
 import { settings } from "@/utils/store";
 
@@ -26,27 +25,22 @@ const Categories = observer(
     };
 
     return (
-      <ScrollView
+      <FlatList
+        inverted={settings.get().isRTL}
         horizontal
-        contentContainerStyle={[
-          styles.categories,
-          {
-            flexDirection: settings.get().isRTL ? "row-reverse" : "row",
-          },
-        ]}
-      >
-        {categories
-          .filter((cat) => cat)
-          .map((category) => (
-            <Tag
-              label={category}
-              key={category}
-              onPress={() => {
-                onCategoryToggle(category);
-              }}
-            />
-          ))}
-      </ScrollView>
+        style={styles.categories}
+        contentContainerStyle={styles.categories}
+        data={categories.filter((cat) => cat)}
+        renderItem={({ item }) => (
+          <Tag
+            label={item}
+            onPress={() => {
+              onCategoryToggle(item);
+            }}
+          />
+        )}
+        keyExtractor={(category) => category}
+      />
     );
   }
 );
@@ -56,6 +50,6 @@ const styles = StyleSheet.create({
   categories: {
     gap: 10,
     paddingVertical: 10,
-    flex: 1,
+    flexGrow: 0,
   },
 });

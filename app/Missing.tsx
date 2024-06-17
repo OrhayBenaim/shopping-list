@@ -1,6 +1,6 @@
 import {
   Dimensions,
-  ScrollView,
+  FlatList,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -63,7 +63,7 @@ const Missing = observer(() => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           onChangeText={(value) => setSearch(value)}
@@ -84,15 +84,21 @@ const Missing = observer(() => {
         categories={GetMissingCategories()}
         onCategoriesChange={setSelectedCategories}
       />
-      {sortedCategories.map(([category, items]) => (
-        <ItemsComponent
-          onItemPress={onItemPress}
-          key={category}
-          items={items}
-          category={category}
-        />
-      ))}
-    </ScrollView>
+
+      <FlatList
+        style={{ flex: 1 }}
+        data={sortedCategories}
+        keyExtractor={([category]) => category}
+        renderItem={({ item: [category, items] }) => (
+          <ItemsComponent
+            onItemPress={onItemPress}
+            key={category}
+            items={items}
+            category={category}
+          />
+        )}
+      />
+    </View>
   );
 });
 export default Missing;

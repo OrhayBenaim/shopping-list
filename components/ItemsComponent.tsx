@@ -4,6 +4,7 @@ import { Item } from "@/models/item";
 import ItemComponent from "./Item";
 import { Text } from "@/components/ui/Text";
 import { settings } from "@/utils/store";
+import { FlatList } from "react-native-gesture-handler";
 
 interface Props {
   items: Item[];
@@ -25,16 +26,19 @@ const ItemsComponent = observer(
     return (
       <View key={category}>
         <Text>{category}</Text>
-        {items.map((item) => (
-          <ItemComponent
-            onItemPress={onItemPress}
-            item={item}
-            key={item.id}
-            IncreaseQuantity={IncreaseQuantity}
-            DecreaseQuantity={DecreaseQuantity}
-            ChangeQuantity={ChangeQuantity}
-          />
-        ))}
+        <FlatList
+          data={items}
+          renderItem={({ item }) => (
+            <ItemComponent
+              onItemPress={onItemPress}
+              item={item}
+              IncreaseQuantity={IncreaseQuantity}
+              DecreaseQuantity={DecreaseQuantity}
+              ChangeQuantity={ChangeQuantity}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     );
   }

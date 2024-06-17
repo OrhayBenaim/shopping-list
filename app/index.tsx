@@ -1,6 +1,6 @@
 import {
   Dimensions,
-  ScrollView,
+  FlatList,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -67,7 +67,7 @@ const Home = observer(() => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           onChangeText={(value) => setSearch(value)}
@@ -89,25 +89,30 @@ const Home = observer(() => {
         categories={GetCategories()}
         onCategoriesChange={setSelectedCategories}
       />
-      {Object.entries(itemsByCategories).map(([category, items]) => (
-        <ItemsComponent
-          ChangeQuantity={ChangeQuantity}
-          DecreaseQuantity={DecreaseQuantity}
-          IncreaseQuantity={IncreaseQuantity}
-          onItemPress={onItemPress}
-          key={category}
-          items={items}
-          category={category}
-        />
-      ))}
-    </ScrollView>
+      <FlatList
+        style={{ flex: 1 }}
+        data={Object.entries(itemsByCategories)}
+        keyExtractor={([category]) => category}
+        renderItem={({ item: [category, item] }) => (
+          <ItemsComponent
+            ChangeQuantity={ChangeQuantity}
+            DecreaseQuantity={DecreaseQuantity}
+            IncreaseQuantity={IncreaseQuantity}
+            onItemPress={onItemPress}
+            key={category}
+            items={item}
+            category={category}
+          />
+        )}
+      />
+    </View>
   );
 });
 export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     paddingTop: 40,
     width: WIDTH,
   },
@@ -116,6 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     alignItems: "center",
     marginBottom: 20,
+    height: 50,
   },
   input: {
     flex: 1,
