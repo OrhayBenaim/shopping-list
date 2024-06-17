@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 
 import { translations } from "@/utils/translations";
 import { useLatch } from "@/hooks/useLatch";
-import { clamp, safeParseFloat } from "@/utils/helpers";
+import { capitalize, clamp, safeParseFloat } from "@/utils/helpers";
 
 const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
@@ -152,7 +152,7 @@ const ItemForm = ({
       quantity: safeParseFloat(data.quantity),
       missingThreshold: safeParseFloat(data.missingThreshold),
       name: data.name.trim(),
-      category: data.category.trim(),
+      category: capitalize(data.category.toLocaleLowerCase().trim()),
     });
   };
 
@@ -166,6 +166,7 @@ const ItemForm = ({
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               containerStyles={styles.containerInput}
+              autoCapitalize="sentences"
               label={translations.name}
               style={[
                 styles.input,
@@ -190,6 +191,7 @@ const ItemForm = ({
             <TextInput
               containerStyles={styles.containerInput}
               label={translations.category}
+              autoCapitalize="sentences"
               style={[
                 styles.input,
                 {
