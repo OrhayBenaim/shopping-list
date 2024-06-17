@@ -93,7 +93,6 @@ export function Nav() {
         style={[
           styles.addButton,
           {
-            backgroundColor: theme.colors.mainBackground,
             borderRadius: ADD_BUTTON_SIZE / 2,
           },
         ]}
