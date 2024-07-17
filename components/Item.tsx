@@ -13,6 +13,7 @@ import { Image } from "expo-image";
 import { Text } from "@/components/ui/Text";
 import { settings } from "@/utils/store";
 import { TextInput } from "@/components/ui/TextInput";
+import { useMemo } from "react";
 
 interface Props {
   item: Item;
@@ -46,6 +47,11 @@ const ItemComponent = observer(
         />
       );
     };
+
+    const hasControls = useMemo(
+      () => !!IncreaseQuantity || !!DecreaseQuantity || !!ChangeQuantity,
+      [IncreaseQuantity, DecreaseQuantity, ChangeQuantity]
+    );
 
     return (
       <View
@@ -83,41 +89,43 @@ const ItemComponent = observer(
             {item.name}
           </Text>
         </TouchableOpacity>
-        <View
-          style={[
-            styles.itemControls,
-            {
-              borderColor: theme.colors.border,
-            },
-          ]}
-        >
-          {IncreaseQuantity && (
-            <TouchableOpacity
-              onPress={() => {
-                IncreaseQuantity(item);
-              }}
-              style={styles.itemButton}
-            >
-              <Ionicons size={30} name="add" />
-            </TouchableOpacity>
-          )}
-          {ChangeQuantity && (
-            <TextInput
-              onEndEditing={(e) => ChangeQuantity(item, e.nativeEvent.text)}
-              keyboardType="numeric"
-              style={styles.quantityInput}
-              defaultValue={item.quantity.toString()}
-            />
-          )}
-          {DecreaseQuantity && (
-            <TouchableOpacity
-              onPress={() => DecreaseQuantity(item)}
-              style={styles.itemButton}
-            >
-              <Ionicons size={30} name="remove" />
-            </TouchableOpacity>
-          )}
-        </View>
+        {hasControls && (
+          <View
+            style={[
+              styles.itemControls,
+              {
+                borderColor: theme.colors.border,
+              },
+            ]}
+          >
+            {IncreaseQuantity && (
+              <TouchableOpacity
+                onPress={() => {
+                  IncreaseQuantity(item);
+                }}
+                style={styles.itemButton}
+              >
+                <Ionicons size={30} name="add" />
+              </TouchableOpacity>
+            )}
+            {ChangeQuantity && (
+              <TextInput
+                onEndEditing={(e) => ChangeQuantity(item, e.nativeEvent.text)}
+                keyboardType="numeric"
+                style={styles.quantityInput}
+                defaultValue={item.quantity.toString()}
+              />
+            )}
+            {DecreaseQuantity && (
+              <TouchableOpacity
+                onPress={() => DecreaseQuantity(item)}
+                style={styles.itemButton}
+              >
+                <Ionicons size={30} name="remove" />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </View>
     );
   }
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
   quantityInput: {
     fontSize: 20,
     height: 30,
-    width: 30,
+    width: 40,
     textAlign: "center",
   },
 });

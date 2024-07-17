@@ -58,7 +58,7 @@ const Missing = observer(() => {
         hiddenFields={["category", "missingThreshold", "name", "camera"]}
         item={item}
       />,
-      "30%"
+      "35%"
     );
   };
 
@@ -105,7 +105,7 @@ export default Missing;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     paddingTop: 40,
     width: WIDTH,
   },
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     alignItems: "center",
     marginBottom: 20,
+    height: 50,
   },
   input: {
     flex: 1,

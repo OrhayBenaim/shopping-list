@@ -10,7 +10,7 @@ import AnimatedBackdrop from "./ui/AnimatedBackdrop";
 
 type PopupStoreType = {
   setOpen: (open: boolean) => void;
-  setContent: (content: React.ReactNode, snapPoint?: string) => void;
+  setContent: (content: React.ReactNode, snapPoint?: string | string[]) => void;
 };
 
 const PopupContext = React.createContext<PopupStoreType>({
@@ -48,10 +48,10 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     }
   };
 
-  const onSetContent = (c: ReactNode, snapPoint?: string) => {
+  const onSetContent = (c: ReactNode, snapPoint?: string | string[]) => {
     _setContent(c);
     if (snapPoint) {
-      setSnapPoints([snapPoint]);
+      setSnapPoints(Array.isArray(snapPoint) ? snapPoint : [snapPoint]);
     } else {
       setSnapPoints([DEFAULT_SNAP_POINT]);
     }
@@ -80,6 +80,9 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
         {children}
 
         <BottomSheetModal
+          keyboardBehavior="interactive"
+          keyboardBlurBehavior="restore"
+          android_keyboardInputMode="adjustResize"
           backdropComponent={() => <AnimatedBackdrop />}
           ref={bottomSheetModalRef}
           index={0}
@@ -112,6 +115,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     width: "100%",
-    padding: 20,
+    paddingHorizontal: 20,
   },
 });

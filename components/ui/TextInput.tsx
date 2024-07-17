@@ -11,12 +11,14 @@ import {
 } from "react-native";
 import { Text } from "./Text";
 import { useTheme } from "@/utils/theme";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 interface TextInputProps extends TextInputReactProps {
   label?: string;
   error?: boolean;
   errorText?: string;
   containerStyles?: StyleProp<ViewStyle>;
+  bottomSheet?: boolean;
 }
 export const TextInput = observer((props: TextInputProps) => {
   const theme = useTheme();
@@ -33,17 +35,32 @@ export const TextInput = observer((props: TextInputProps) => {
   return (
     <View style={containerStyles}>
       {props.label && <Text style={styles.label}>{props.label}</Text>}
-      <ReactTextInput
-        {...props}
-        style={[
-          {
-            textAlign: settings.get().isRTL ? "right" : "left",
-          },
-          ...propsStyle,
-        ]}
-      >
-        {props.children}
-      </ReactTextInput>
+      {props.bottomSheet ? (
+        <BottomSheetTextInput
+          {...props}
+          style={[
+            {
+              textAlign: settings.get().isRTL ? "right" : "left",
+            },
+            ...propsStyle,
+          ]}
+        >
+          {props.children}
+        </BottomSheetTextInput>
+      ) : (
+        <ReactTextInput
+          {...props}
+          style={[
+            {
+              textAlign: settings.get().isRTL ? "right" : "left",
+            },
+            ...propsStyle,
+          ]}
+        >
+          {props.children}
+        </ReactTextInput>
+      )}
+
       {props.error && (
         <Text
           style={[

@@ -167,6 +167,7 @@ const ItemForm = ({
             <TextInput
               containerStyles={styles.containerInput}
               autoCapitalize="sentences"
+              bottomSheet
               label={translations.name}
               style={[
                 styles.input,
@@ -190,6 +191,7 @@ const ItemForm = ({
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               containerStyles={styles.containerInput}
+              bottomSheet
               label={translations.category}
               autoCapitalize="sentences"
               style={[
@@ -214,6 +216,7 @@ const ItemForm = ({
               containerStyles={styles.containerInput}
               label={translations.quantity}
               keyboardType="numeric"
+              bottomSheet
               style={[
                 styles.input,
                 {
@@ -242,6 +245,7 @@ const ItemForm = ({
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               containerStyles={styles.containerInput}
+              bottomSheet
               label={translations.missingThreshold}
               style={[
                 styles.input,
