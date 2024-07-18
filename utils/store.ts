@@ -112,7 +112,7 @@ export const GetCategories = () => {
 
 export const GetMissingCategories = () => {
   const categories = new Set(GetMissingItems().map((item) => item.category));
-  return Array.from(categories);
+  return Array.from(categories).filter((category) => category);
 };
 
 export const onInsert = (item: Item) => {
