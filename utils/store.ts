@@ -107,7 +107,7 @@ export const FilteredItemsByName = (items: Item[], name: string) => {
 
 export const GetCategories = () => {
   const categories = new Set(GetItems().map((item) => item.category));
-  return Array.from(categories);
+  return Array.from(categories).filter((category) => category);
 };
 
 export const GetMissingCategories = () => {

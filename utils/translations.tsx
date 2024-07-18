@@ -26,6 +26,7 @@ const _translations = {
     exitAppQuestion: "Exiting the application?",
     exitAppCancel: "Cancel",
     exitAppOk: "OK",
+    noCategories: "No categories found",
   },
   he: {
     search: "חיפוש",
@@ -51,6 +52,7 @@ const _translations = {
     exitAppQuestion: "לצאת מהאפליקציה?",
     exitAppCancel: "ביטול",
     exitAppOk: "אישור",
+    noCategories: "לא נמצאו קטגוריות",
   },
 };
 

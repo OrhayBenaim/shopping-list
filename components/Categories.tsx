@@ -30,7 +30,7 @@ const Categories = observer(
         horizontal
         style={styles.categories}
         contentContainerStyle={styles.categories}
-        data={categories.filter((cat) => cat)}
+        data={categories}
         renderItem={({ item }) => (
           <Tag
             label={item}

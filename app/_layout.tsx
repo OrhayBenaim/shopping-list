@@ -20,6 +20,8 @@ import { observer } from "@legendapp/state/react";
 import { settings } from "@/utils/store";
 import { useNavigation } from "expo-router";
 import { translations } from "@/utils/translations";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 
 I18nManager.allowRTL(false);
 I18nManager.forceRTL(false);
@@ -87,9 +89,11 @@ export default function RootLayout() {
   }
 
   return (
-    <View onLayout={onLayoutRootView} style={StyleSheet.absoluteFill}>
-      <RootLayoutNav />
-    </View>
+    <AutocompleteDropdownContextProvider>
+      <View onLayout={onLayoutRootView} style={StyleSheet.absoluteFill}>
+        <RootLayoutNav />
+      </View>
+    </AutocompleteDropdownContextProvider>
   );
 }
 
@@ -98,11 +102,13 @@ const RootLayoutNav = observer(() => {
   return (
     <ThemeProvider theme={theme} key={lang}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <CameraProvider>
-          <PopupProvider>
-            <AppLayout />
-          </PopupProvider>
-        </CameraProvider>
+        <KeyboardProvider>
+          <CameraProvider>
+            <PopupProvider>
+              <AppLayout />
+            </PopupProvider>
+          </CameraProvider>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </ThemeProvider>
   );

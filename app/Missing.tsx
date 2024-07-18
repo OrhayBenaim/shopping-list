@@ -58,7 +58,7 @@ const Missing = observer(() => {
         hiddenFields={["category", "missingThreshold", "name", "camera"]}
         item={item}
       />,
-      "35%"
+      "25%"
     );
   };
 

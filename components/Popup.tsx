@@ -80,10 +80,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
         {children}
 
         <BottomSheetModal
-          keyboardBehavior="interactive"
           keyboardBlurBehavior="restore"
-          android_keyboardInputMode="adjustResize"
-          backdropComponent={() => <AnimatedBackdrop />}
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
