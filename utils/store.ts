@@ -9,10 +9,12 @@ export const state = observable<Item[]>([]);
 type Lang = "en" | "he";
 
 export const settings = observable<{
+  sync: boolean;
   endpoint?: string;
   language: Lang;
   isRTL: boolean;
 }>({
+  sync: false,
   endpoint: undefined,
   language: "en",
   isRTL: false,
@@ -38,22 +40,29 @@ persistObservable(state, {
     get: ({ onChange }) => {
       setInterval(async () => {
         try {
-          const endpoint = settings.get().endpoint;
-          if (endpoint) {
-            await fetch(`${endpoint}/ping`);
+          const _settings = settings.get();
+
+          if (_settings.endpoint && _settings.sync) {
+            await fetch(`${_settings.endpoint}/ping`);
             if (snapshot.get().length === 0) {
-              const result = await fetch(`${endpoint}/items`).then((res) =>
-                res.json()
-              );
-              const items = state.get();
-              const updatedItems = result.value.map((item: Item) => {
-                const existingItem = items.find((i) => i.id === item.id);
-                if (existingItem && existingItem.updatedAt > item.updatedAt) {
-                  return existingItem;
-                }
-                return item;
-              });
-              onChange(updatedItems);
+              const result: Item[] = await fetch(
+                `${_settings.endpoint}/items`
+              ).then((res) => res.json());
+              // const items = state.get();
+              // const updatedItems: Map<string, Item> = [
+              //   ...items,
+              //   ...result,
+              // ].reduce((acc, current) => {
+              //   if (!acc.has(current.id)) acc.set(current.id, current);
+              //   else {
+              //     const existingItem = acc.get(current.id)!;
+              //     if (existingItem.updatedAt < current.updatedAt) {
+              //       acc.set(current.id, current);
+              //     }
+              //   }
+              //   return acc;
+              // }, new Map<string, Item>([]));
+              onChange({ value: result });
             }
           }
         } catch (error) {}
@@ -65,22 +74,25 @@ persistObservable(state, {
       if (retryInterval) clearInterval(retryInterval);
       retryInterval = setInterval(async () => {
         try {
-          const endpoint = settings.get().endpoint;
+          const _settings = settings.get();
           const snapshotItems = snapshot.get();
 
-          if (endpoint && snapshotItems.length > 0) {
-            await fetch(`${endpoint}/ping`);
-            await fetch(`${endpoint}/items`, {
+          if (_settings.endpoint && _settings.sync) {
+            await fetch(`${_settings.endpoint}/ping`);
+            await fetch(`${_settings.endpoint}/items`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify(snapshotItems),
             });
+            snapshot.set([]);
             clearInterval(retryInterval);
           }
-        } catch (error) {}
-      }, 10_000);
+        } catch (error) {
+          console.error(error);
+        }
+      }, 5_000);
     },
   },
 });
@@ -163,5 +175,19 @@ export const SetLanguage = (language: Lang) => {
     ...sett,
     language,
     isRTL: language === "he",
+  }));
+};
+
+export const SetSync = (sync: boolean) => {
+  settings.set((sett) => ({
+    ...sett,
+    sync,
+  }));
+};
+
+export const SetEndpoint = (endpoint: string) => {
+  settings.set((sett) => ({
+    ...sett,
+    endpoint,
   }));
 };

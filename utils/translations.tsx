@@ -27,6 +27,7 @@ const _translations = {
     exitAppCancel: "Cancel",
     exitAppOk: "OK",
     noCategories: "No categories found",
+    endpoint: "endpoint",
   },
   he: {
     search: "חיפוש",
@@ -53,6 +54,7 @@ const _translations = {
     exitAppCancel: "ביטול",
     exitAppOk: "אישור",
     noCategories: "לא נמצאו קטגוריות",
+    endpoint: "כתובת סנכרון",
   },
 };
 

@@ -7,6 +7,7 @@ export type Item = {
   category: string;
   updatedAt: number;
   image?: string;
+  blurHash?: string;
 };
 
 export type FormItem = Omit<Item, "quantity" | "missingThreshold"> & {
