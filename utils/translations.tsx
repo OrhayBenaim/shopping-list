@@ -30,6 +30,7 @@ const _translations = {
     endpoint: "endpoint",
     language: "Language",
     enableSync: "Enable sync",
+    authorization: "Authorization",
   },
   he: {
     search: "חיפוש",
@@ -57,6 +58,7 @@ const _translations = {
     exitAppOk: "אישור",
     noCategories: "לא נמצאו קטגוריות",
     endpoint: "כתובת סנכרון",
+    authorization: "קוד משתמש",
     language: "שפה",
     enableSync: "אפשר סנכרון",
   },

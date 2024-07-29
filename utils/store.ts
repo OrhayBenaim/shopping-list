@@ -12,6 +12,7 @@ type Lang = "en" | "he";
 export const settings = observable<{
   sync: boolean;
   endpoint?: string;
+  authorization?: string;
   language: Lang;
   isRTL: boolean;
 }>({
@@ -46,10 +47,19 @@ persistObservable(state, {
           const _settings = settings.get();
 
           if (_settings.endpoint && _settings.sync) {
-            await fetch(`${_settings.endpoint}/ping`);
+            await fetch(`${_settings.endpoint}/ping`, {
+              headers: {
+                Authorization: `Basic ${_settings.authorization}`,
+              },
+            });
             if (snapshot.get().length === 0) {
               const result: Item[] = await fetch(
-                `${_settings.endpoint}/items`
+                `${_settings.endpoint}/items`,
+                {
+                  headers: {
+                    Authorization: `Basic ${_settings.authorization}`,
+                  },
+                }
               ).then((res) => res.json());
               // const items = state.get();
               // const updatedItems: Map<string, Item> = [
@@ -81,7 +91,11 @@ persistObservable(state, {
           const snapshotItems = snapshot.get();
 
           if (_settings.endpoint && _settings.sync) {
-            await fetch(`${_settings.endpoint}/ping`);
+            await fetch(`${_settings.endpoint}/ping`, {
+              headers: {
+                Authorization: `Basic ${_settings.authorization}`,
+              },
+            });
 
             const uploads = snapshotItems.filter(
               (item) => item?.image && !item.blurHash
@@ -94,6 +108,9 @@ persistObservable(state, {
                   httpMethod: "POST",
                   uploadType: FileSystem.FileSystemUploadType.MULTIPART,
                   fieldName: "file",
+                  headers: {
+                    Authorization: `Basic ${_settings.authorization}`,
+                  },
                 }
               );
             });
@@ -101,6 +118,7 @@ persistObservable(state, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Basic ${_settings.authorization}`,
               },
               body: JSON.stringify(snapshotItems),
             });
@@ -111,7 +129,7 @@ persistObservable(state, {
         } catch (error) {
           console.error(error);
         }
-      }, 5_000);
+      }, 2_000);
     },
   },
 });
@@ -208,5 +226,12 @@ export const SetEndpoint = (endpoint: string) => {
   settings.set((sett) => ({
     ...sett,
     endpoint,
+  }));
+};
+
+export const SetAuthorization = (authorization?: string) => {
+  settings.set((sett) => ({
+    ...sett,
+    authorization,
   }));
 };

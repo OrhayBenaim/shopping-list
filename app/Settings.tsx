@@ -11,7 +11,13 @@ import { Text } from "@/components/ui/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { SetEndpoint, SetLanguage, SetSync, settings } from "@/utils/store";
+import {
+  SetAuthorization,
+  SetEndpoint,
+  SetLanguage,
+  SetSync,
+  settings,
+} from "@/utils/store";
 import { translations } from "@/utils/translations";
 import * as Application from "expo-application";
 import { TextInput } from "@/components/ui/TextInput";
@@ -37,12 +43,16 @@ const Settings = observer(() => {
       keepTouched: true,
       keepDirtyValues: true,
     },
-    defaultValues: { endpoint: _settings.endpoint },
+    defaultValues: {
+      endpoint: _settings.endpoint,
+      authorization: _settings.authorization,
+    },
   });
 
   const onSave = (data: EndpointForm) => {
     if (!data.endpoint) return;
     SetEndpoint(data.endpoint);
+    SetAuthorization(data.authorization);
   };
 
   return (
@@ -98,6 +108,22 @@ const Settings = observer(() => {
                     containerStyles={styles.containerInput}
                     autoCapitalize="none"
                     label={translations.endpoint}
+                    style={[styles.input]}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="authorization"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    containerStyles={styles.containerInput}
+                    autoCapitalize="none"
+                    label={translations.authorization}
                     style={[styles.input]}
                     value={value}
                     onChangeText={onChange}

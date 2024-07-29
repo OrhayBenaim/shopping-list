@@ -12,6 +12,8 @@ interface BlurImageProps extends ImageProps {
 export const BlurImageProps = observer((props: BlurImageProps) => {
   const [exists, setExists] = useState(false);
   const endpoint = settings.get().endpoint;
+  const authorization = settings.get().authorization;
+
   useEffect(() => {
     if (props.uri) {
       FileSystem.getInfoAsync(props.uri).then((info) => {
@@ -22,7 +24,12 @@ export const BlurImageProps = observer((props: BlurImageProps) => {
             if (fileName) {
               FileSystem.downloadAsync(
                 `${endpoint}/images/${fileName}`,
-                props.uri
+                props.uri,
+                {
+                  headers: {
+                    Authorization: `Basic ${authorization}`,
+                  },
+                }
               ).then(() => {
                 setExists(true);
               });
