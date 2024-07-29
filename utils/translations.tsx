@@ -28,6 +28,8 @@ const _translations = {
     exitAppOk: "OK",
     noCategories: "No categories found",
     endpoint: "endpoint",
+    language: "Language",
+    enableSync: "Enable sync",
   },
   he: {
     search: "חיפוש",
@@ -55,6 +57,8 @@ const _translations = {
     exitAppOk: "אישור",
     noCategories: "לא נמצאו קטגוריות",
     endpoint: "כתובת סנכרון",
+    language: "שפה",
+    enableSync: "אפשר סנכרון",
   },
 };
 

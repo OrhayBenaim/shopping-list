@@ -66,13 +66,18 @@ const Settings = observer(() => {
         </View>
 
         <View>
-          <Picker
-            selectedValue={_settings.language}
-            onValueChange={(itemValue) => SetLanguage(itemValue)}
-          >
-            <Picker.Item label={translations.english} value="en" />
-            <Picker.Item label={translations.hebrew} value="he" />
-          </Picker>
+          <View style={styles.group}>
+            <Text>{translations.language}</Text>
+            <Picker
+              selectedValue={_settings.language}
+              onValueChange={(itemValue) => SetLanguage(itemValue)}
+            >
+              <Picker.Item label={translations.english} value="en" />
+              <Picker.Item label={translations.hebrew} value="he" />
+            </Picker>
+          </View>
+
+          <Text>{translations.enableSync}</Text>
 
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
@@ -149,6 +154,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginHorizontal: "auto",
+  },
+  group: {
+    marginBottom: 20,
   },
   containerInput: {
     marginBottom: 20,

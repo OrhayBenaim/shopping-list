@@ -9,11 +9,12 @@ import { observer } from "@legendapp/state/react";
 import { Item } from "@/models/item";
 import { useTheme } from "@/utils/theme";
 import { usePopup } from "./Popup";
-import { Image } from "expo-image";
 import { Text } from "@/components/ui/Text";
 import { settings } from "@/utils/store";
 import { TextInput } from "@/components/ui/TextInput";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import * as FileSystem from "expo-file-system";
+import { BlurImageProps } from "./Image";
 
 interface Props {
   item: Item;
@@ -34,16 +35,23 @@ const ItemComponent = observer(
 
     const { setContent } = usePopup();
 
+    const image = useMemo(() => {
+      if (FileSystem.documentDirectory && item.image) {
+        return FileSystem.documentDirectory + item.image;
+      }
+    }, [item.image]);
+
     const onImagePreview = (e: GestureResponderEvent) => {
       e.stopPropagation();
       setContent(
-        <Image
+        <BlurImageProps
           style={{
             flex: 1,
             marginBottom: 20,
           }}
           contentFit="fill"
-          source={{ uri: item.image }}
+          uri={image}
+          blurhash={item.blurHash}
         />
       );
     };
@@ -74,7 +82,7 @@ const ItemComponent = observer(
             },
           ]}
         >
-          {item.image && (
+          {image && (
             <TouchableOpacity onPress={onImagePreview}>
               <Ionicons
                 style={{

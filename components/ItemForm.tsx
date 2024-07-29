@@ -16,6 +16,7 @@ import { capitalize, clamp, safeParseFloat } from "@/utils/helpers";
 import { AutoComplete } from "./ui/Autocomplete";
 import { observer } from "@legendapp/state/react";
 import { GetCategories } from "@/utils/store";
+import { BlurImageProps } from "./Image";
 
 const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
@@ -86,7 +87,7 @@ const ItemForm = observer(
             from: uri,
             to: newPath,
           });
-          dispatch({ type: "updateImage", payload: newPath });
+          dispatch({ type: "updateImage", payload: fileName! });
         } catch (error) {
           throw error;
         }
@@ -104,6 +105,23 @@ const ItemForm = observer(
         saveLocalImage(result.assets[0].uri);
       }
     };
+
+    const onItemSubmit = (data: FormItem) => {
+      onSubmit({
+        ...data,
+        image: state.image,
+        quantity: safeParseFloat(data.quantity),
+        missingThreshold: safeParseFloat(data.missingThreshold),
+        name: data.name.trim(),
+        category: capitalize(data.category.toLocaleLowerCase().trim()),
+      });
+    };
+
+    const image = useMemo(() => {
+      if (FileSystem.documentDirectory && state.image) {
+        return FileSystem.documentDirectory + state.image;
+      }
+    }, [state.image]);
 
     if (mediaSelection) {
       return (
@@ -152,17 +170,6 @@ const ItemForm = observer(
         </View>
       );
     }
-
-    const onItemSubmit = (data: FormItem) => {
-      onSubmit({
-        ...data,
-        image: state.image,
-        quantity: safeParseFloat(data.quantity),
-        missingThreshold: safeParseFloat(data.missingThreshold),
-        name: data.name.trim(),
-        category: capitalize(data.category.toLocaleLowerCase().trim()),
-      });
-    };
 
     return (
       <View style={styles.container}>
@@ -286,7 +293,7 @@ const ItemForm = observer(
               styles.imageButton,
               {
                 borderColor: theme.colors.primaryAction,
-                backgroundColor: state.image
+                backgroundColor: image
                   ? "transparent"
                   : theme.colors.mainBackground,
               },
@@ -295,10 +302,11 @@ const ItemForm = observer(
               setMediaSelection(true);
             }}
           >
-            {state.image && (
-              <Image
+            {image && (
+              <BlurImageProps
                 style={[styles.image, StyleSheet.absoluteFill]}
-                source={{ uri: state.image }}
+                uri={image}
+                blurhash={item.blurHash}
                 blurRadius={5}
                 contentFit="cover"
               />

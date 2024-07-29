@@ -3,6 +3,7 @@ import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 import { persistObservable } from "@legendapp/state/persist";
 import { Item, MAX_QUANTITY } from "@/models/item";
 import { clamp, safeParseFloat } from "./helpers";
+import * as FileSystem from "expo-file-system";
 
 export const state = observable<Item[]>([]);
 
@@ -22,6 +23,7 @@ export const settings = observable<{
 
 export const snapshot = observable<(Item | undefined)[]>([]);
 let retryInterval: NodeJS.Timeout | undefined = undefined;
+let getInterval: NodeJS.Timeout | undefined = undefined;
 
 persistObservable(settings, {
   local: "settings", // Unique name
@@ -38,7 +40,8 @@ persistObservable(state, {
   pluginLocal: ObservablePersistMMKV,
   pluginRemote: {
     get: ({ onChange }) => {
-      setInterval(async () => {
+      if (getInterval) clearInterval(getInterval);
+      getInterval = setInterval(async () => {
         try {
           const _settings = settings.get();
 
@@ -79,6 +82,21 @@ persistObservable(state, {
 
           if (_settings.endpoint && _settings.sync) {
             await fetch(`${_settings.endpoint}/ping`);
+
+            const uploads = snapshotItems.filter(
+              (item) => item?.image && !item.blurHash
+            );
+            const uploadsPromises = uploads.map((item) => {
+              return FileSystem.uploadAsync(
+                `${_settings.endpoint}/upload`,
+                FileSystem.documentDirectory + item!.image!,
+                {
+                  httpMethod: "POST",
+                  uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                  fieldName: "file",
+                }
+              );
+            });
             await fetch(`${_settings.endpoint}/items`, {
               method: "POST",
               headers: {
@@ -86,6 +104,7 @@ persistObservable(state, {
               },
               body: JSON.stringify(snapshotItems),
             });
+            await Promise.all(uploadsPromises);
             snapshot.set([]);
             clearInterval(retryInterval);
           }
