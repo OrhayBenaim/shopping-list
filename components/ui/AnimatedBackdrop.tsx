@@ -1,16 +1,9 @@
 import React from "react";
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeOut,
-  Keyframe,
-} from "react-native-reanimated";
-import { useTheme } from "@/utils/theme";
+import Animated, { Easing, Keyframe } from "react-native-reanimated";
 import { StyleSheet } from "react-native";
+import { colors } from "@/utils/theme";
 
 const AnimatedBackdrop = () => {
-  const theme = useTheme();
-
   const enteringAnimation = new Keyframe({
     0: {
       opacity: 0,
@@ -38,7 +31,7 @@ const AnimatedBackdrop = () => {
       style={[
         StyleSheet.absoluteFill,
         {
-          backgroundColor: theme.colors.border,
+          backgroundColor: colors.secondary,
         },
       ]}
     />

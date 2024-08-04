@@ -2,9 +2,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { FormItem, Item, MAX_QUANTITY } from "@/models/item";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@/utils/theme";
 import { useCamera } from "./Camera";
-import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { Text } from "@/components/ui/Text";
@@ -17,6 +15,7 @@ import { AutoComplete } from "./ui/Autocomplete";
 import { observer } from "@legendapp/state/react";
 import { GetCategories } from "@/utils/store";
 import { BlurImageProps } from "./Image";
+import { colors } from "@/utils/theme";
 
 const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
@@ -46,7 +45,6 @@ const ItemForm = observer(
     const [state, dispatch] = useReducer(reducer, formItem);
     const [mediaSelection, setMediaSelection] = useState(false);
     const camera = useCamera();
-    const theme = useTheme();
     const categories = GetCategories();
 
     const {
@@ -141,14 +139,12 @@ const ItemForm = observer(
             style={[
               styles.addButton,
               {
-                backgroundColor: theme.colors.primaryAction,
+                backgroundColor: colors.primary,
               },
             ]}
             onPress={() => camera.setOpen(true)}
           >
-            <Text
-              style={[styles.buttonText, { color: theme.colors.lightText }]}
-            >
+            <Text style={[styles.buttonText, { color: colors.foreground }]}>
               {translations.capturePicture}
             </Text>
           </TouchableOpacity>
@@ -156,14 +152,12 @@ const ItemForm = observer(
             style={[
               styles.addButton,
               {
-                backgroundColor: theme.colors.primaryAction,
+                backgroundColor: colors.primary,
               },
             ]}
             onPress={pickImage}
           >
-            <Text
-              style={[styles.buttonText, { color: theme.colors.lightText }]}
-            >
+            <Text style={[styles.buttonText, { color: colors.foreground }]}>
               {translations.choosePicture}
             </Text>
           </TouchableOpacity>
@@ -187,7 +181,7 @@ const ItemForm = observer(
                 style={[
                   styles.input,
                   {
-                    backgroundColor: theme.colors.mainBackground,
+                    backgroundColor: colors.foreground,
                   },
                 ]}
                 value={value}
@@ -215,7 +209,7 @@ const ItemForm = observer(
                 style={[
                   styles.input,
                   {
-                    backgroundColor: theme.colors.mainBackground,
+                    backgroundColor: colors.foreground,
                   },
                 ]}
                 value={value}
@@ -238,7 +232,7 @@ const ItemForm = observer(
                 style={[
                   styles.input,
                   {
-                    backgroundColor: theme.colors.mainBackground,
+                    backgroundColor: colors.foreground,
                   },
                 ]}
                 value={value}
@@ -268,7 +262,7 @@ const ItemForm = observer(
                 style={[
                   styles.input,
                   {
-                    backgroundColor: theme.colors.mainBackground,
+                    backgroundColor: colors.foreground,
                   },
                 ]}
                 keyboardType="numeric"
@@ -292,10 +286,8 @@ const ItemForm = observer(
             style={[
               styles.imageButton,
               {
-                borderColor: theme.colors.primaryAction,
-                backgroundColor: image
-                  ? "transparent"
-                  : theme.colors.mainBackground,
+                borderColor: colors.primary,
+                backgroundColor: image ? "transparent" : colors.foreground,
               },
             ]}
             onPress={() => {
@@ -313,7 +305,7 @@ const ItemForm = observer(
             )}
             <Ionicons
               style={{
-                color: theme.colors.primaryAction,
+                color: colors.primary,
               }}
               size={40}
               name="camera-outline"
@@ -333,14 +325,12 @@ const ItemForm = observer(
               style={[
                 styles.deleteButton,
                 {
-                  backgroundColor: theme.colors.dangerAction,
+                  backgroundColor: colors.danger,
                 },
               ]}
               onPress={onDeletePress}
             >
-              <Text
-                style={[styles.buttonText, { color: theme.colors.lightText }]}
-              >
+              <Text style={[styles.buttonText, { color: colors.foreground }]}>
                 {translations.delete}
               </Text>
             </TouchableOpacity>
@@ -350,18 +340,16 @@ const ItemForm = observer(
               styles.addButton,
               isValid
                 ? {
-                    backgroundColor: theme.colors.primaryAction,
+                    backgroundColor: colors.primary,
                   }
                 : {
-                    backgroundColor: theme.colors.disable,
+                    backgroundColor: colors.secondary,
                   },
             ]}
             disabled={!isValid}
             onPress={handleSubmit(onItemSubmit)}
           >
-            <Text
-              style={[styles.buttonText, { color: theme.colors.lightText }]}
-            >
+            <Text style={[styles.buttonText, { color: colors.foreground }]}>
               {translations.save}
             </Text>
           </TouchableOpacity>

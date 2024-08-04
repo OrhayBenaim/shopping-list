@@ -10,18 +10,18 @@ import {
   ViewStyle,
 } from "react-native";
 import { Text } from "./Text";
-import { useTheme } from "@/utils/theme";
+import { colors } from "@/utils/theme";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 interface TextInputProps extends TextInputReactProps {
   label?: string;
   error?: boolean;
+  placeholder?: string;
   errorText?: string;
   containerStyles?: StyleProp<ViewStyle>;
   bottomSheet?: boolean;
 }
 export const TextInput = observer((props: TextInputProps) => {
-  const theme = useTheme();
   const propsStyle = useMemo(() => {
     return Array.isArray(props.style) ? props.style : [props.style];
   }, [props.style]);
@@ -66,7 +66,7 @@ export const TextInput = observer((props: TextInputProps) => {
           style={[
             styles.error,
             {
-              color: theme.colors.dangerAction,
+              color: colors.danger,
             },
           ]}
         >

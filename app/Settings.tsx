@@ -21,7 +21,6 @@ import {
 import { translations } from "@/utils/translations";
 import * as Application from "expo-application";
 import { TextInput } from "@/components/ui/TextInput";
-import { useTheme } from "@/utils/theme";
 import { Controller, useForm } from "react-hook-form";
 import { EndpointForm } from "@/models/settings";
 
@@ -29,7 +28,6 @@ const WIDTH = Dimensions.get("window").width;
 
 const Settings = observer(() => {
   const navigation = useNavigation();
-  const theme = useTheme();
 
   const _settings = settings.get();
 
@@ -58,102 +56,70 @@ const Settings = observer(() => {
   return (
     <View style={StyleSheet.absoluteFill}>
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.dispatch(DrawerActions.openDrawer());
-            }}
+        <View style={styles.group}>
+          <Text>{translations.language}</Text>
+          <Picker
+            selectedValue={_settings.language}
+            onValueChange={(itemValue) => SetLanguage(itemValue)}
           >
-            <Ionicons size={30} name="menu-outline" />
-          </TouchableOpacity>
-
-          <Text style={styles.headerTitle}>{translations.settings}</Text>
-          <Ionicons
-            size={30}
-            name="menu-outline"
-            style={{ color: "transparent" }}
-          />
+            <Picker.Item label={translations.english} value="en" />
+            <Picker.Item label={translations.hebrew} value="he" />
+          </Picker>
         </View>
 
-        <View>
-          <View style={styles.group}>
-            <Text>{translations.language}</Text>
-            <Picker
-              selectedValue={_settings.language}
-              onValueChange={(itemValue) => SetLanguage(itemValue)}
+        <Text>{translations.enableSync}</Text>
+
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={"#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={(value) => SetSync(value)}
+          value={_settings.sync}
+        />
+
+        {_settings.sync && (
+          <View>
+            <Controller
+              control={control}
+              name="endpoint"
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  containerStyles={styles.containerInput}
+                  autoCapitalize="none"
+                  label={translations.endpoint}
+                  style={[styles.input]}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="authorization"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  containerStyles={styles.containerInput}
+                  autoCapitalize="none"
+                  label={translations.authorization}
+                  style={[styles.input]}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+              )}
+            />
+            <TouchableOpacity
+              style={[styles.saveButton]}
+              disabled={!isValid}
+              onPress={handleSubmit(onSave)}
             >
-              <Picker.Item label={translations.english} value="en" />
-              <Picker.Item label={translations.hebrew} value="he" />
-            </Picker>
+              <Text style={[styles.buttonText]}>{translations.save}</Text>
+            </TouchableOpacity>
           </View>
-
-          <Text>{translations.enableSync}</Text>
-
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={"#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={(value) => SetSync(value)}
-            value={_settings.sync}
-          />
-
-          {_settings.sync && (
-            <View>
-              <Controller
-                control={control}
-                name="endpoint"
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    containerStyles={styles.containerInput}
-                    autoCapitalize="none"
-                    label={translations.endpoint}
-                    style={[styles.input]}
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="authorization"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    containerStyles={styles.containerInput}
-                    autoCapitalize="none"
-                    label={translations.authorization}
-                    style={[styles.input]}
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.saveButton,
-                  isValid
-                    ? {
-                        backgroundColor: theme.colors.primaryAction,
-                      }
-                    : {
-                        backgroundColor: theme.colors.disable,
-                      },
-                ]}
-                disabled={!isValid}
-                onPress={handleSubmit(onSave)}
-              >
-                <Text
-                  style={[styles.buttonText, { color: theme.colors.lightText }]}
-                >
-                  {translations.save}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
+        )}
       </ScrollView>
       <Text style={styles.version}>
         V{Application.nativeApplicationVersion}
@@ -166,9 +132,6 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 40,
-    width: WIDTH,
   },
   header: {
     flexDirection: "row",

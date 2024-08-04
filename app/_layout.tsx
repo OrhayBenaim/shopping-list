@@ -1,5 +1,4 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { ThemeProvider } from "@shopify/restyle";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect } from "react";
@@ -13,7 +12,6 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import theme from "@/utils/theme";
 import AppLayout from "@/components/AppLayout";
 import { CameraProvider } from "@/components/Camera";
 import { observer } from "@legendapp/state/react";
@@ -100,16 +98,14 @@ export default function RootLayout() {
 const RootLayoutNav = observer(() => {
   const lang = settings.get().language;
   return (
-    <ThemeProvider theme={theme} key={lang}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <KeyboardProvider>
-          <CameraProvider>
-            <PopupProvider>
-              <AppLayout />
-            </PopupProvider>
-          </CameraProvider>
-        </KeyboardProvider>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <KeyboardProvider>
+        <CameraProvider>
+          <PopupProvider>
+            <AppLayout />
+          </PopupProvider>
+        </CameraProvider>
+      </KeyboardProvider>
+    </GestureHandlerRootView>
   );
 });

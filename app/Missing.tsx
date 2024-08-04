@@ -24,6 +24,7 @@ import { translations } from "@/utils/translations";
 import { TextInput } from "@/components/ui/TextInput";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import SearchInput from "@/components/ui/Search";
 
 const WIDTH = Dimensions.get("window").width;
 
@@ -64,22 +65,8 @@ const Missing = observer(() => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          onChangeText={(value) => setSearch(value)}
-          style={styles.input}
-          placeholder={translations.search}
-          containerStyles={{ flex: 1 }}
-        />
+      <SearchInput onChangeText={setSearch} />
 
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(DrawerActions.openDrawer());
-          }}
-        >
-          <Ionicons size={30} name="menu-outline" />
-        </TouchableOpacity>
-      </View>
       <Categories
         categories={GetMissingCategories()}
         onCategoriesChange={setSelectedCategories}
@@ -105,22 +92,5 @@ export default Missing;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    paddingTop: 40,
-    width: WIDTH,
-  },
-  searchContainer: {
-    gap: 10,
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    marginBottom: 20,
-    height: 50,
-  },
-  input: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#f4f4f4",
-    fontSize: 18,
   },
 });

@@ -1,12 +1,11 @@
 import React, { ReactNode, useEffect } from "react";
-import { BackHandler, StyleSheet, View } from "react-native";
+import { BackHandler, StyleSheet } from "react-native";
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/utils/theme";
-import AnimatedBackdrop from "./ui/AnimatedBackdrop";
+import { colors } from "@/utils/theme";
 
 type PopupStoreType = {
   setOpen: (open: boolean) => void;
@@ -34,7 +33,6 @@ const DEFAULT_SNAP_POINT = "75%";
 export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [snapPoints, setSnapPoints] = React.useState([DEFAULT_SNAP_POINT]);
   const [content, _setContent] = React.useState<React.ReactNode>(undefined);
-  const theme = useTheme();
   const [open, setPopupOpen] = React.useState(false);
   // ref
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
@@ -97,7 +95,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
             elevation: 24,
           }}
           backgroundStyle={{
-            backgroundColor: theme.colors.secondaryBackground,
+            backgroundColor: colors.foreground,
           }}
         >
           <BottomSheetView style={styles.contentContainer}>

@@ -1,7 +1,6 @@
 import {
   AutocompleteDropdown,
   AutocompleteDropdownItem,
-  IAutocompleteDropdownRef,
 } from "react-native-autocomplete-dropdown";
 import { useBottomSheetInternal } from "@gorhom/bottom-sheet";
 import {
@@ -11,13 +10,13 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import { useTheme } from "@/utils/theme";
 import { useCallback, useMemo, useRef } from "react";
 import { observer } from "@legendapp/state/react";
 import { Text } from "./Text";
 import { settings } from "@/utils/store";
 import { translations } from "@/utils/translations";
 import { CustomAutocompleteItem } from "./CustomAutocompleteItem";
+import { colors } from "@/utils/theme";
 
 interface AutocompleteProps extends TextInputProps {
   options: { id: string; title: string }[];
@@ -28,7 +27,6 @@ interface AutocompleteProps extends TextInputProps {
 }
 
 export const AutoComplete = observer((props: AutocompleteProps) => {
-  const theme = useTheme();
   const autoCompleteRef = useRef<any>(null);
   const { shouldHandleKeyboardEvents } = useBottomSheetInternal();
   const initialValue = useMemo(() => {
@@ -116,7 +114,7 @@ export const AutoComplete = observer((props: AutocompleteProps) => {
           style={[
             styles.error,
             {
-              color: theme.colors.dangerAction,
+              color: colors.danger,
             },
           ]}
         >

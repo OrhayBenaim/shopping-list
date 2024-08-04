@@ -1,10 +1,10 @@
-import { StyleSheet, View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { observer } from "@legendapp/state/react";
 import { Item } from "@/models/item";
 import ItemComponent from "./Item";
 import { Text } from "@/components/ui/Text";
-import { settings } from "@/utils/store";
 import { FlatList } from "react-native-gesture-handler";
+import { spacing } from "@/utils/theme";
 
 interface Props {
   items: Item[];
@@ -24,8 +24,8 @@ const ItemsComponent = observer(
     ChangeQuantity,
   }: Props) => {
     return (
-      <View key={category}>
-        <Text>{category}</Text>
+      <View key={category} style={styles.container}>
+        <Text variant="sm">{category}</Text>
         <FlatList
           data={items}
           renderItem={({ item }) => (
@@ -43,4 +43,12 @@ const ItemsComponent = observer(
     );
   }
 );
+
+const styles = StyleSheet.create({
+  container: {
+    gap: spacing.s,
+    flexDirection: "column",
+  },
+});
+
 export default ItemsComponent;

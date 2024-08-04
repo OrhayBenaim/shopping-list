@@ -3,6 +3,7 @@ import { StyleSheet, FlatList } from "react-native";
 import Tag from "@/components/ui/Tag";
 import { observer } from "@legendapp/state/react";
 import { settings } from "@/utils/store";
+import { spacing } from "@/utils/theme";
 
 interface CategoriesProps {
   categories: string[];
@@ -48,8 +49,9 @@ const Categories = observer(
 export default Categories;
 const styles = StyleSheet.create({
   categories: {
-    gap: 10,
-    paddingVertical: 10,
+    gap: spacing.s,
+    paddingTop: spacing.s,
+    paddingBottom: spacing.m,
     flexGrow: 0,
   },
 });

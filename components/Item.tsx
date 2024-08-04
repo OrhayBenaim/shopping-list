@@ -7,14 +7,14 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { observer } from "@legendapp/state/react";
 import { Item } from "@/models/item";
-import { useTheme } from "@/utils/theme";
 import { usePopup } from "./Popup";
 import { Text } from "@/components/ui/Text";
 import { settings } from "@/utils/store";
 import { TextInput } from "@/components/ui/TextInput";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import * as FileSystem from "expo-file-system";
 import { BlurImageProps } from "./Image";
+import { colors, spacing, typography } from "@/utils/theme";
 
 interface Props {
   item: Item;
@@ -31,8 +31,6 @@ const ItemComponent = observer(
     DecreaseQuantity,
     ChangeQuantity,
   }: Props) => {
-    const theme = useTheme();
-
     const { setContent } = usePopup();
 
     const image = useMemo(() => {
@@ -86,34 +84,24 @@ const ItemComponent = observer(
             <TouchableOpacity onPress={onImagePreview}>
               <Ionicons
                 style={{
-                  color: theme.colors.secondaryAction,
+                  color: colors.text,
                 }}
-                size={30}
+                size={20}
                 name="image-outline"
               />
             </TouchableOpacity>
           )}
-          <Text numberOfLines={1} style={styles.itemText}>
-            {item.name}
-          </Text>
+          <Text numberOfLines={1}>{item.name}</Text>
         </TouchableOpacity>
         {hasControls && (
-          <View
-            style={[
-              styles.itemControls,
-              {
-                borderColor: theme.colors.border,
-              },
-            ]}
-          >
+          <View style={styles.itemControls}>
             {IncreaseQuantity && (
               <TouchableOpacity
                 onPress={() => {
                   IncreaseQuantity(item);
                 }}
-                style={styles.itemButton}
               >
-                <Ionicons size={30} name="add" />
+                <Ionicons size={20} name="add" />
               </TouchableOpacity>
             )}
             {ChangeQuantity && (
@@ -125,11 +113,8 @@ const ItemComponent = observer(
               />
             )}
             {DecreaseQuantity && (
-              <TouchableOpacity
-                onPress={() => DecreaseQuantity(item)}
-                style={styles.itemButton}
-              >
-                <Ionicons size={30} name="remove" />
+              <TouchableOpacity onPress={() => DecreaseQuantity(item)}>
+                <Ionicons size={20} name="remove" />
               </TouchableOpacity>
             )}
           </View>
@@ -141,35 +126,30 @@ const ItemComponent = observer(
 export default ItemComponent;
 const styles = StyleSheet.create({
   item: {
-    width: "100%",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
-    height: 50,
+    marginBottom: spacing.s,
   },
-  itemButton: {
-    padding: 10,
-  },
-  itemText: {
-    fontSize: 24,
-  },
+
   editArea: {
     flex: 1,
     alignItems: "center",
-
-    gap: 10,
+    gap: spacing.s,
   },
   itemControls: {
     flexDirection: "row-reverse",
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: 10,
+    gap: spacing.s,
+    paddingVertical: spacing.s / 2,
+    paddingHorizontal: spacing.s,
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: 9999,
+    borderColor: colors.text,
+    width: 120,
   },
   quantityInput: {
-    fontSize: 20,
-    height: 30,
-    width: 40,
+    fontSize: typography.s,
     textAlign: "center",
   },
 });

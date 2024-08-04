@@ -1,57 +1,78 @@
-import { useTheme } from "@/utils/theme";
-import { Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { Nav } from "@/components/Nav";
-import { Drawer } from "expo-router/drawer";
-import { translations } from "@/utils/translations";
+import { colors, spacing } from "@/utils/theme";
+import { Stack, useRouter } from "expo-router";
+import { useEffect } from "react";
+import { SetIntro, settings, state } from "@/utils/store";
 
 export default function AppLayout() {
-  const theme = useTheme();
+  const router = useRouter();
+  const showIntro = settings.get().showIntro;
+  const list = state.get();
+  useEffect(() => {
+    if (showIntro && list && list.length === 0) {
+      router.replace("/Intro");
+    }
+    if (list && list.length > 0) {
+      SetIntro(false);
+    }
+  }, []);
   return (
     <View
       style={[
         styles.layout,
         {
-          backgroundColor: theme.colors.mainBackground,
+          backgroundColor: colors.foreground,
         },
       ]}
     >
-      <Drawer>
-        <Drawer.Screen
-          name="index" // This is the name of the page and must match the url from root
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: "fade",
+        }}
+      >
+        <Stack.Screen
+          name="index"
           options={{
-            drawerLabel: translations.home,
-            title: translations.home,
-            headerShown: false,
-            sceneContainerStyle: {
-              backgroundColor: theme.colors.mainBackground,
+            contentStyle: {
+              backgroundColor: colors.foreground,
             },
           }}
         />
-        <Drawer.Screen
-          name="Missing" // This is the name of the page and must match the url from root
+        <Stack.Screen
+          name="Missing"
           options={{
-            drawerLabel: translations.missingItems,
-            headerShown: false,
-            title: translations.missingItems,
-            sceneContainerStyle: {
-              backgroundColor: theme.colors.mainBackground,
+            contentStyle: {
+              backgroundColor: colors.foreground,
             },
           }}
         />
-
-        <Drawer.Screen
-          name="Settings" // This is the name of the page and must match the url from root
+        <Stack.Screen
+          name="Share"
           options={{
-            drawerLabel: translations.settings,
-            headerShown: false,
-            title: translations.settings,
-            sceneContainerStyle: {
-              backgroundColor: theme.colors.mainBackground,
+            contentStyle: {
+              backgroundColor: colors.foreground,
             },
           }}
         />
-      </Drawer>
+        <Stack.Screen
+          name="Settings"
+          options={{
+            contentStyle: {
+              backgroundColor: colors.foreground,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Intro"
+          options={{
+            contentStyle: {
+              backgroundColor: colors.foreground,
+            },
+          }}
+        />
+      </Stack>
 
       <Nav />
     </View>
@@ -61,5 +82,7 @@ export default function AppLayout() {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
+    paddingHorizontal: spacing.l,
+    paddingTop: spacing.m,
   },
 });

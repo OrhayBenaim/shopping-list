@@ -1,5 +1,6 @@
 import { observe } from "@legendapp/state";
 import { settings } from "./store";
+import Intro from "@/app/Intro";
 
 const _translations = {
   en: {
@@ -31,6 +32,12 @@ const _translations = {
     language: "Language",
     enableSync: "Enable sync",
     authorization: "Authorization",
+    comingSoon: "Coming soon",
+    ShareFeatureDescription:
+      "the ability to share lists with friends and family",
+    IntroTitle: "You don’t have items in your list",
+    IntroSubtitle:
+      "When you add items to your list, you’ll see them here!, Happy organizing!",
   },
   he: {
     search: "חיפוש",
@@ -61,6 +68,11 @@ const _translations = {
     authorization: "קוד משתמש",
     language: "שפה",
     enableSync: "אפשר סנכרון",
+
+    comingSoon: "בקרוב",
+    ShareFeatureDescription: "אפשרות לשתף רשימות עם חברים ומשפחה",
+    IntroTitle: "אין פריטים ברשימה",
+    IntroSubtitle: "כאשר תוסיפו פריטים לרשימה, תראו אותם כאן! תהנו מארגון קל!",
   },
 };
 

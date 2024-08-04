@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, StyleSheet, View } from "react-native";
 import { observer } from "@legendapp/state/react";
 import {
   ChangeQuantity,
@@ -24,11 +18,8 @@ import { usePopup } from "@/components/Popup";
 import ItemForm from "@/components/ItemForm";
 import Categories from "@/components/Categories";
 import ItemsComponent from "@/components/ItemsComponent";
-import { translations } from "@/utils/translations";
-import { TextInput } from "@/components/ui/TextInput";
 import { useNavigation } from "expo-router";
-import { DrawerActions } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import SearchInput from "@/components/ui/Search";
 
 const WIDTH = Dimensions.get("window").width;
 
@@ -68,23 +59,7 @@ const Home = observer(() => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          onChangeText={(value) => setSearch(value)}
-          style={styles.input}
-          placeholder={translations.search}
-          containerStyles={{ flex: 1 }}
-        />
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(DrawerActions.openDrawer());
-          }}
-        >
-          <Ionicons size={30} name="menu-outline" />
-        </TouchableOpacity>
-      </View>
-
+      <SearchInput onChangeText={setSearch} />
       <Categories
         categories={GetCategories()}
         onCategoriesChange={setSelectedCategories}
@@ -112,22 +87,5 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    paddingTop: 40,
-    width: WIDTH,
-  },
-  searchContainer: {
-    gap: 10,
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    marginBottom: 20,
-    height: 50,
-  },
-  input: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#f4f4f4",
-    fontSize: 18,
   },
 });

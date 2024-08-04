@@ -29,6 +29,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      [
+        "expo-asset",
+
+        {
+          "assets": ["./assets/images/intro.png", "./assets/images/share.png"]
+        }
+      ],
       "expo-font",
       "expo-router",
       [

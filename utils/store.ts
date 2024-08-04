@@ -15,11 +15,13 @@ export const settings = observable<{
   authorization?: string;
   language: Lang;
   isRTL: boolean;
+  showIntro: boolean;
 }>({
   sync: false,
   endpoint: undefined,
   language: "en",
   isRTL: false,
+  showIntro: true,
 });
 
 export const snapshot = observable<(Item | undefined)[]>([]);
@@ -168,6 +170,7 @@ export const onInsert = (item: Item) => {
   item.missing = item.missingThreshold >= item.quantity;
   item.updatedAt = new Date().getTime();
   state.set((items) => [...items, item]);
+  SetIntro(false);
 };
 
 export const onDelete = (itemId: string) => {
@@ -233,5 +236,12 @@ export const SetAuthorization = (authorization?: string) => {
   settings.set((sett) => ({
     ...sett,
     authorization,
+  }));
+};
+
+export const SetIntro = (intro: boolean) => {
+  settings.set((sett) => ({
+    ...sett,
+    showIntro: intro,
   }));
 };

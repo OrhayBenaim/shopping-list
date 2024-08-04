@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Text } from '@/components/ui/Text';
-import { useTheme } from '@/utils/theme';
+import { useState } from "react";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { Text } from "@/components/ui/Text";
+import { colors, spacing, typography } from "@/utils/theme";
 
 interface TagProps {
   label: string;
@@ -9,7 +9,6 @@ interface TagProps {
 }
 const Tag = ({ label, onPress }: TagProps) => {
   const [selected, setSelected] = useState<boolean>(false);
-  const theme = useTheme();
 
   const onToggle = () => {
     setSelected((s) => !s);
@@ -20,15 +19,36 @@ const Tag = ({ label, onPress }: TagProps) => {
     <TouchableOpacity
       onPress={onToggle}
       aria-selected={selected}
-      style={[selected ? theme.tag.selected.button : theme.tag.normal.button]}
+      style={[styles.button, selected && styles.selectedButton]}
     >
-      <Text
-        style={[selected ? theme.tag.selected.text : theme.tag.normal.text]}
-      >
+      <Text style={[styles.text, selected && styles.selectedText]}>
         {label}
       </Text>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: colors.foreground,
+    paddingHorizontal: spacing.s,
+    paddingVertical: spacing.s / 2,
+    borderRadius: 9999,
+    borderWidth: 1,
+    borderColor: colors.secondary,
+  },
+  text: {
+    fontSize: typography.s,
+    color: colors.secondary,
+  },
+
+  selectedText: {
+    color: colors.foreground,
+  },
+  selectedButton: {
+    backgroundColor: colors.secondary,
+    borderColor: colors.foreground,
+  },
+});
 
 export default Tag;
