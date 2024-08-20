@@ -1,7 +1,7 @@
 import "react-native-get-random-values";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link, usePathname } from "expo-router";
+import { Link, usePathname, useRouter } from "expo-router";
 import Animated, {
   useSharedValue,
   withTiming,
@@ -11,7 +11,7 @@ import Animated, {
 import { useLayoutEffect } from "react";
 import { usePopup } from "./Popup";
 import ItemForm from "./ItemForm";
-import { onInsert } from "@/utils/store";
+import { onInsert, SetIntro, settings } from "@/utils/store";
 import { Item } from "@/models/item";
 import { Text } from "@/components/ui/Text";
 import * as Crypto from "expo-crypto";
@@ -27,8 +27,11 @@ const INDICATOR_POSITIONS = {
 
 export function Nav() {
   const pathname = usePathname();
+  const router = useRouter();
+
   const { setContent, setOpen } = usePopup();
   const left = useSharedValue(INDICATOR_POSITIONS[pathname]);
+  const showIntro = settings.get().showIntro;
 
   useLayoutEffect(() => {
     left.value = INDICATOR_POSITIONS[pathname];
@@ -46,6 +49,10 @@ export function Nav() {
   const onInsertItem = (item: Item) => {
     onInsert(item);
     setOpen(false);
+    if (showIntro) {
+      SetIntro(false);
+      router.replace("/");
+    }
   };
   const onAddPress = () => {
     setContent(
@@ -100,6 +107,7 @@ export function Nav() {
         <Link href="/Share" asChild>
           <TouchableOpacity style={{ ...styles.link, ...styles.alignEnd }}>
             <ShareIcon
+              style={{ transform: [{ scale: 0.85 }] }}
               variant={pathname === "/Share" ? "primary" : "default"}
             />
             <Text variant="sm" style={styles.linkText}>
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     flexDirection: "row-reverse",
     borderRadius: 9999,
-    paddingHorizontal: spacing.l,
+    paddingHorizontal: spacing.m,
     paddingVertical: spacing.s,
     shadowColor: "#000",
     shadowOffset: {

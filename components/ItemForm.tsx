@@ -15,7 +15,7 @@ import { AutoComplete } from "./ui/Autocomplete";
 import { observer } from "@legendapp/state/react";
 import { GetCategories } from "@/utils/store";
 import { BlurImageProps } from "./Image";
-import { colors } from "@/utils/theme";
+import { colors, spacing, typography } from "@/utils/theme";
 
 const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
@@ -178,12 +178,7 @@ const ItemForm = observer(
                 autoCapitalize="sentences"
                 bottomSheet
                 label={translations.name}
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: colors.foreground,
-                  },
-                ]}
+                style={styles.input}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -206,12 +201,6 @@ const ItemForm = observer(
                 containerStyles={styles.containerInput}
                 label={translations.category}
                 autoCapitalize="sentences"
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: colors.foreground,
-                  },
-                ]}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -229,12 +218,7 @@ const ItemForm = observer(
                 label={translations.quantity}
                 keyboardType="numeric"
                 bottomSheet
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: colors.foreground,
-                  },
-                ]}
+                style={styles.input}
                 value={value}
                 onChangeText={(value) => {
                   if (IGNORED_QUANTITY_KEYS.test(value)) return;
@@ -259,12 +243,7 @@ const ItemForm = observer(
                 containerStyles={styles.containerInput}
                 bottomSheet
                 label={translations.missingThreshold}
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: colors.foreground,
-                  },
-                ]}
+                style={styles.input}
                 keyboardType="numeric"
                 value={value}
                 onChangeText={(value) => {
@@ -320,21 +299,6 @@ const ItemForm = observer(
             },
           ]}
         >
-          {deleteAble && (
-            <TouchableOpacity
-              style={[
-                styles.deleteButton,
-                {
-                  backgroundColor: colors.danger,
-                },
-              ]}
-              onPress={onDeletePress}
-            >
-              <Text style={[styles.buttonText, { color: colors.foreground }]}>
-                {translations.delete}
-              </Text>
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
             style={[
               styles.addButton,
@@ -349,10 +313,16 @@ const ItemForm = observer(
             disabled={!isValid}
             onPress={handleSubmit(onItemSubmit)}
           >
-            <Text style={[styles.buttonText, { color: colors.foreground }]}>
-              {translations.save}
-            </Text>
+            <Text style={styles.buttonText}>{translations.save}</Text>
           </TouchableOpacity>
+          {deleteAble && (
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={onDeletePress}
+            >
+              <Text style={styles.buttonText}>{translations.delete}</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
@@ -380,32 +350,35 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   input: {
-    width: "100%",
-    height: 45,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    fontSize: 18,
+    borderWidth: 2,
+    borderColor: colors.secondary,
+    borderRadius: 8,
+    backgroundColor: colors.foreground,
+    fontSize: typography.m,
+    padding: spacing.s,
   },
   containerInput: {
     marginBottom: 20,
   },
   buttons: {
-    gap: 10,
+    gap: spacing.m,
   },
   addButton: {
-    padding: 10,
-    borderRadius: 10,
+    padding: spacing.s,
+    borderRadius: 8,
     flex: 1,
     alignItems: "center",
   },
   deleteButton: {
-    padding: 10,
-    borderRadius: 10,
+    padding: spacing.s,
+    borderRadius: 8,
     alignItems: "center",
+    backgroundColor: colors.danger,
   },
   buttonText: {
-    fontSize: 24,
+    fontSize: typography.l,
     fontWeight: "bold",
+    color: colors.foreground,
   },
 });
 

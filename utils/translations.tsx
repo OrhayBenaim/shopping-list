@@ -20,6 +20,7 @@ const _translations = {
     missingItems: "Missing items",
     english: "English",
     hebrew: "Hebrew",
+    selectLanguage: "Select language",
 
     requiredField: "This field is required",
 
@@ -56,6 +57,7 @@ const _translations = {
     missingItems: "פריטים חסרים",
     english: "אנגלית",
     hebrew: "עברית",
+    selectLanguage: "בחר שפה",
 
     requiredField: "שדה חובה",
 

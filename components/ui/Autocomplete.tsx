@@ -16,7 +16,7 @@ import { Text } from "./Text";
 import { settings } from "@/utils/store";
 import { translations } from "@/utils/translations";
 import { CustomAutocompleteItem } from "./CustomAutocompleteItem";
-import { colors } from "@/utils/theme";
+import { colors, spacing, typography } from "@/utils/theme";
 
 interface AutocompleteProps extends TextInputProps {
   options: { id: string; title: string }[];
@@ -84,6 +84,7 @@ export const AutoComplete = observer((props: AutocompleteProps) => {
           props.onChangeText?.(item?.title || "");
         }}
         inputContainerStyle={[
+          styles.input,
           ...propsStyle,
           {
             flexDirection: settings.get().isRTL ? "row-reverse" : "row",
@@ -127,11 +128,20 @@ export const AutoComplete = observer((props: AutocompleteProps) => {
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: typography.s,
     display: "flex",
+    color: colors.secondary,
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: colors.secondary,
+    borderRadius: 8,
+    backgroundColor: colors.foreground,
+    fontSize: typography.m,
+    paddingHorizontal: spacing.s,
   },
   error: {
-    fontSize: 14,
+    fontSize: typography.s,
+    color: colors.danger,
   },
 });

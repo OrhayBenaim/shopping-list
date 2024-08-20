@@ -10,7 +10,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { Text } from "./Text";
-import { colors } from "@/utils/theme";
+import { colors, spacing, typography } from "@/utils/theme";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 interface TextInputProps extends TextInputReactProps {
@@ -61,29 +61,19 @@ export const TextInput = observer((props: TextInputProps) => {
         </ReactTextInput>
       )}
 
-      {props.error && (
-        <Text
-          style={[
-            styles.error,
-            {
-              color: colors.danger,
-            },
-          ]}
-        >
-          {props.errorText}
-        </Text>
-      )}
+      {props.error && <Text style={styles.error}>{props.errorText}</Text>}
     </View>
   );
 });
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: typography.s,
     display: "flex",
+    color: colors.secondary,
   },
   error: {
-    fontSize: 14,
+    fontSize: typography.s,
+    color: colors.danger,
   },
 });

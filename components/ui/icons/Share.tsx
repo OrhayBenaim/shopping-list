@@ -5,6 +5,7 @@ import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg";
 interface Props extends SvgProps {
   variant?: "default" | "primary";
 }
+
 const ShareIcon = (props: Props) => {
   if (props.variant === "primary") {
     return (

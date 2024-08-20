@@ -7,7 +7,7 @@ import * as FileSystem from "expo-file-system";
 
 export const state = observable<Item[]>([]);
 
-type Lang = "en" | "he";
+export type Lang = "en" | "he";
 
 export const settings = observable<{
   sync: boolean;
