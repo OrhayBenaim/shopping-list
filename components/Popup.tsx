@@ -82,6 +82,9 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
+          handleIndicatorStyle={{
+            backgroundColor: colors.secondary,
+          }}
           style={{
             backgroundColor: "rgba(255, 255, 255,0)", // <==== HERE
             shadowColor: "#000",
