@@ -9,20 +9,11 @@ import { spacing } from "@/utils/theme";
 interface Props {
   items: Item[];
   category: string;
-  IncreaseQuantity?: (item: Item) => void;
-  DecreaseQuantity?: (item: Item) => void;
-  ChangeQuantity?: (item: Item, quantity: string) => void;
+  ToggleMissing?: (item: Item) => void;
   onItemPress: (item: Item) => void;
 }
 const ItemsComponent = observer(
-  ({
-    category,
-    items,
-    onItemPress,
-    IncreaseQuantity,
-    DecreaseQuantity,
-    ChangeQuantity,
-  }: Props) => {
+  ({ category, items, onItemPress, ToggleMissing }: Props) => {
     return (
       <View key={category} style={styles.container}>
         <Text variant="sm">{category}</Text>
@@ -32,9 +23,7 @@ const ItemsComponent = observer(
             <ItemComponent
               onItemPress={onItemPress}
               item={item}
-              IncreaseQuantity={IncreaseQuantity}
-              DecreaseQuantity={DecreaseQuantity}
-              ChangeQuantity={ChangeQuantity}
+              onToggleMissing={ToggleMissing}
             />
           )}
           keyExtractor={(item) => item.id}

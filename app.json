@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#0076CE"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ottersproduction.shoppinglist"
@@ -31,9 +33,11 @@
     "plugins": [
       [
         "expo-asset",
-
         {
-          "assets": ["./assets/images/intro.png", "./assets/images/share.png"]
+          "assets": [
+            "./assets/images/intro.png",
+            "./assets/images/share.png"
+          ]
         }
       ],
       "expo-font",
@@ -56,7 +60,9 @@
         {
           "photosPermission": "The app accesses your photos to let you add an image to a shopping list item."
         }
-      ]
+      ],
+      "expo-localization",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

@@ -15,11 +15,15 @@ import {
 import AppLayout from "@/components/AppLayout";
 import { CameraProvider } from "@/components/Camera";
 import { observer } from "@legendapp/state/react";
-import { settings } from "@/utils/store";
 import { useNavigation } from "expo-router";
 import { translations } from "@/utils/translations";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import { PostHogProvider } from "posthog-react-native";
+import { usePostHog } from "posthog-react-native";
+import { settings } from "@/utils/store";
+import * as Crypto from "expo-crypto";
+import * as SecureStore from "expo-secure-store";
 
 I18nManager.allowRTL(false);
 I18nManager.forceRTL(false);
@@ -87,16 +91,44 @@ export default function RootLayout() {
   }
 
   return (
-    <AutocompleteDropdownContextProvider>
-      <View onLayout={onLayoutRootView} style={StyleSheet.absoluteFill}>
-        <RootLayoutNav />
-      </View>
-    </AutocompleteDropdownContextProvider>
+    <PostHogProvider
+      apiKey={process.env.EXPO_PUBLIC_API_KEY}
+      options={{
+        host: process.env.EXPO_PUBLIC_API_URL,
+      }}
+    >
+      <AutocompleteDropdownContextProvider>
+        <View onLayout={onLayoutRootView} style={StyleSheet.absoluteFill}>
+          <RootLayoutNav />
+        </View>
+      </AutocompleteDropdownContextProvider>
+    </PostHogProvider>
   );
 }
 
 const RootLayoutNav = observer(() => {
-  const lang = settings.get().language;
+  const posthog = usePostHog();
+
+  const { language, sync, endpoint, showIntro } = settings.get();
+
+  useEffect(() => {
+    (async () => {
+      let id = await SecureStore.getItemAsync("id");
+      if (!id) {
+        id = await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.SHA256,
+          Math.random().toString()
+        );
+        await SecureStore.setItemAsync("id", id);
+      }
+      posthog.identify(id, {
+        language,
+        remote_sync: sync && !!endpoint,
+        intro: showIntro,
+      });
+    })();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardProvider>

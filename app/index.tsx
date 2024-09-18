@@ -1,32 +1,29 @@
-import { Dimensions, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { observer } from "@legendapp/state/react";
 import {
-  ChangeQuantity,
-  DecreaseQuantity,
   FilteredItemsByCategories,
   FilteredItemsByName,
   GetCategories,
   GetItems,
-  IncreaseQuantity,
   ItemsByCategories,
   onDelete,
   onUpdate,
 } from "@/utils/store";
 import { type Item } from "@/models/item";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePopup } from "@/components/Popup";
 import ItemForm from "@/components/ItemForm";
 import Categories from "@/components/Categories";
 import ItemsComponent from "@/components/ItemsComponent";
-import { useNavigation } from "expo-router";
 import SearchInput from "@/components/ui/Search";
-
-const WIDTH = Dimensions.get("window").width;
+import { usePostHog } from "posthog-react-native";
+import { useScreen } from "@/hooks/useScreen";
 
 const Home = observer(() => {
   const [search, setSearch] = useState("");
-  const navigation = useNavigation();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const posthog = usePostHog();
+  const screen = useScreen();
 
   const { setContent, setOpen } = usePopup();
 
@@ -39,11 +36,13 @@ const Home = observer(() => {
   const onItemPopupSave = (item: Item) => {
     setOpen(false);
     onUpdate(item);
+    posthog.capture("Updated item", { screen });
   };
 
   const onItemDelete = (itemId: string) => {
     onDelete(itemId);
     setOpen(false);
+    posthog.capture("Delete item", { screen });
   };
 
   const onItemPress = (item: Item) => {
@@ -56,6 +55,10 @@ const Home = observer(() => {
       />
     );
   };
+
+  useEffect(() => {
+    posthog.capture("Home page loaded", { screen });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -70,13 +73,11 @@ const Home = observer(() => {
         keyExtractor={([category]) => category}
         renderItem={({ item: [category, item] }) => (
           <ItemsComponent
-            ChangeQuantity={ChangeQuantity}
-            DecreaseQuantity={DecreaseQuantity}
-            IncreaseQuantity={IncreaseQuantity}
             onItemPress={onItemPress}
             key={category}
             items={item}
             category={category}
+            ToggleMissing={onUpdate}
           />
         )}
       />

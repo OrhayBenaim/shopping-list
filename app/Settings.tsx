@@ -23,9 +23,18 @@ import { Controller, useForm } from "react-hook-form";
 import { EndpointForm } from "@/models/settings";
 import { colors, spacing, typography } from "@/utils/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useScreen } from "@/hooks/useScreen";
+import { usePostHog } from "posthog-react-native";
+import { useEffect } from "react";
 
 const Settings = observer(() => {
   const _settings = settings.get();
+  const screen = useScreen();
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    posthog.capture("Settings page loaded", { screen });
+  }, []);
 
   const {
     control,
@@ -45,8 +54,19 @@ const Settings = observer(() => {
 
   const onSave = (data: EndpointForm) => {
     if (!data.endpoint) return;
+    posthog.capture("Saved syncing server", {
+      screen,
+    });
     SetEndpoint(data.endpoint);
     SetAuthorization(data.authorization);
+  };
+
+  const onSyncChange = (value: boolean) => {
+    posthog.capture("Changed syncing", {
+      screen,
+      enabled: value,
+    });
+    SetSync(value);
   };
 
   return (
@@ -74,7 +94,10 @@ const Settings = observer(() => {
             )}
             value={_settings.language}
             placeholder={{}}
-            onValueChange={(value: Lang) => SetLanguage(value)}
+            onValueChange={(value: Lang) => {
+              posthog.capture("Changed language", { screen, lang: value });
+              SetLanguage(value);
+            }}
             items={[
               { label: translations.english, value: "en" },
               { label: translations.hebrew, value: "he" },
@@ -91,7 +114,11 @@ const Settings = observer(() => {
               },
             ]}
           >
-            <TouchableOpacity onPress={() => SetSync(!_settings.sync)}>
+            <TouchableOpacity
+              onPress={() => {
+                onSyncChange(!_settings.sync);
+              }}
+            >
               <Text style={styles.label}>{translations.enableSync}</Text>
             </TouchableOpacity>
 
@@ -99,7 +126,7 @@ const Settings = observer(() => {
               trackColor={{ false: "#767577", true: colors.primary }}
               thumbColor={"#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={(value) => SetSync(value)}
+              onValueChange={(value) => onSyncChange(value)}
               value={_settings.sync}
             />
           </View>

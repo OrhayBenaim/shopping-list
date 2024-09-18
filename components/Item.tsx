@@ -10,28 +10,23 @@ import { Item } from "@/models/item";
 import { usePopup } from "./Popup";
 import { Text } from "@/components/ui/Text";
 import { settings } from "@/utils/store";
-import { TextInput } from "@/components/ui/TextInput";
 import { useMemo } from "react";
 import * as FileSystem from "expo-file-system";
 import { BlurImageProps } from "./Image";
 import { colors, spacing, typography } from "@/utils/theme";
+import { useScreen } from "@/hooks/useScreen";
+import { usePostHog } from "posthog-react-native";
 
 interface Props {
   item: Item;
-  IncreaseQuantity?: (item: Item) => void;
-  DecreaseQuantity?: (item: Item) => void;
-  ChangeQuantity?: (item: Item, quantity: string) => void;
+  onToggleMissing?: (item: Item) => void;
   onItemPress: (item: Item) => void;
 }
 const ItemComponent = observer(
-  ({
-    item,
-    onItemPress,
-    IncreaseQuantity,
-    DecreaseQuantity,
-    ChangeQuantity,
-  }: Props) => {
+  ({ item, onItemPress, onToggleMissing }: Props) => {
     const { setContent } = usePopup();
+    const screen = useScreen();
+    const posthog = usePostHog();
 
     const image = useMemo(() => {
       if (FileSystem.documentDirectory && item.image) {
@@ -40,6 +35,8 @@ const ItemComponent = observer(
     }, [item.image]);
 
     const onImagePreview = (e: GestureResponderEvent) => {
+      posthog.capture("Image preview", { screen });
+
       e.stopPropagation();
       setContent(
         <BlurImageProps
@@ -54,10 +51,15 @@ const ItemComponent = observer(
       );
     };
 
-    const hasControls = useMemo(
-      () => !!IncreaseQuantity || !!DecreaseQuantity || !!ChangeQuantity,
-      [IncreaseQuantity, DecreaseQuantity, ChangeQuantity]
-    );
+    const onToggleMissingItem = () => {
+      if (!onToggleMissing) return;
+      onToggleMissing({
+        ...item,
+        missing: !item.missing,
+      });
+    };
+
+    const hasControls = useMemo(() => !!onToggleMissing, [onToggleMissing]);
 
     return (
       <View
@@ -71,6 +73,8 @@ const ItemComponent = observer(
       >
         <TouchableOpacity
           onPress={() => {
+            posthog.capture("Item pressed", { screen });
+
             onItemPress(item);
           }}
           style={[
@@ -94,30 +98,19 @@ const ItemComponent = observer(
           <Text numberOfLines={1}>{item.name}</Text>
         </TouchableOpacity>
         {hasControls && (
-          <View style={styles.itemControls}>
-            {IncreaseQuantity && (
-              <TouchableOpacity
-                onPress={() => {
-                  IncreaseQuantity(item);
-                }}
-              >
-                <Ionicons size={20} name="add" />
-              </TouchableOpacity>
-            )}
-            {ChangeQuantity && (
-              <TextInput
-                onEndEditing={(e) => ChangeQuantity(item, e.nativeEvent.text)}
-                keyboardType="numeric"
-                style={styles.quantityInput}
-                defaultValue={item.quantity.toString()}
-              />
-            )}
-            {DecreaseQuantity && (
-              <TouchableOpacity onPress={() => DecreaseQuantity(item)}>
-                <Ionicons size={20} name="remove" />
-              </TouchableOpacity>
-            )}
-          </View>
+          <TouchableOpacity onPress={onToggleMissingItem}>
+            <Ionicons
+              style={{
+                color: item.missing ? colors.danger : colors.secondary,
+              }}
+              size={typography.xxl}
+              name={
+                item.missing
+                  ? "close-circle-outline"
+                  : "checkmark-circle-outline"
+              }
+            />
+          </TouchableOpacity>
         )}
       </View>
     );
@@ -136,18 +129,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.s,
   },
-  itemControls: {
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: spacing.s,
-    paddingVertical: spacing.s / 2,
-    paddingHorizontal: spacing.s,
-    borderWidth: 1,
-    borderRadius: 9999,
-    borderColor: colors.text,
-    width: 120,
-  },
+
   quantityInput: {
     fontSize: typography.s,
     textAlign: "center",

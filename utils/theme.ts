@@ -17,4 +17,5 @@ export const typography = {
   m: 16,
   l: 18,
   xl: 22,
+  xxl: 30,
 };

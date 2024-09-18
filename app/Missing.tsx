@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { observer } from "@legendapp/state/react";
 import {
   FilteredItemsByCategories,
@@ -15,24 +9,21 @@ import {
   onUpdate,
 } from "@/utils/store";
 import type { Item } from "@/models/item";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePopup } from "@/components/Popup";
 import ItemForm from "@/components/ItemForm";
 import ItemsComponent from "@/components/ItemsComponent";
 import Categories from "@/components/Categories";
-import { translations } from "@/utils/translations";
-import { TextInput } from "@/components/ui/TextInput";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import SearchInput from "@/components/ui/Search";
-
-const WIDTH = Dimensions.get("window").width;
+import { usePostHog } from "posthog-react-native";
+import { useScreen } from "@/hooks/useScreen";
 
 const Missing = observer(() => {
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const { setContent, setOpen } = usePopup();
-  const navigation = useNavigation();
+  const posthog = usePostHog();
+  const screen = useScreen();
 
   const filteredItems = FilteredItemsByName(
     FilteredItemsByCategories(GetMissingItems(), selectedCategories),
@@ -50,6 +41,7 @@ const Missing = observer(() => {
   const onItemPopupSave = (item: Item) => {
     setOpen(false);
     onUpdate(item);
+    posthog.capture("Updated item", { screen });
   };
 
   const onItemPress = (item: Item) => {
@@ -62,6 +54,10 @@ const Missing = observer(() => {
       "25%"
     );
   };
+
+  useEffect(() => {
+    posthog.capture("Missing page loaded", { screen });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -82,6 +78,7 @@ const Missing = observer(() => {
             key={category}
             items={items}
             category={category}
+            ToggleMissing={onUpdate}
           />
         )}
       />

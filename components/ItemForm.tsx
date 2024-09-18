@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { FormItem, Item, MAX_QUANTITY } from "@/models/item";
+import { Item } from "@/models/item";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useCamera } from "./Camera";
@@ -16,8 +16,9 @@ import { observer } from "@legendapp/state/react";
 import { GetCategories } from "@/utils/store";
 import { BlurImageProps } from "./Image";
 import { colors, spacing, typography } from "@/utils/theme";
+import { useScreen } from "@/hooks/useScreen";
+import { usePostHog } from "posthog-react-native";
 
-const IGNORED_QUANTITY_KEYS = /[-, ]/;
 type fields = "name" | "category" | "quantity" | "missingThreshold" | "camera";
 interface Props {
   item: Item;
@@ -34,15 +35,10 @@ const ItemForm = observer(
     onDelete,
     deleteAble = false,
   }: Props) => {
-    const formItem = useMemo(
-      () => ({
-        ...item,
-        quantity: item.quantity.toString(),
-        missingThreshold: item.missingThreshold.toString(),
-      }),
-      [item]
-    );
-    const [state, dispatch] = useReducer(reducer, formItem);
+    const screen = useScreen();
+    const posthog = usePostHog();
+
+    const [state, dispatch] = useReducer(reducer, item);
     const [mediaSelection, setMediaSelection] = useState(false);
     const camera = useCamera();
     const categories = GetCategories();
@@ -57,7 +53,7 @@ const ItemForm = observer(
         keepTouched: true,
         keepDirtyValues: true,
       },
-      defaultValues: { ...formItem },
+      defaultValues: { ...item },
     });
 
     const latchedDirty = useLatch(isDirty, true);
@@ -77,6 +73,8 @@ const ItemForm = observer(
     };
 
     const saveLocalImage = async (uri: string) => {
+      posthog.capture("Saved image", { screen });
+
       if (FileSystem.documentDirectory) {
         const fileName = uri.split("/").pop();
         const newPath = FileSystem.documentDirectory + fileName;
@@ -92,6 +90,8 @@ const ItemForm = observer(
       }
     };
     const pickImage = async () => {
+      posthog.capture("Choose gallery", { screen });
+
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: false,
@@ -104,12 +104,10 @@ const ItemForm = observer(
       }
     };
 
-    const onItemSubmit = (data: FormItem) => {
+    const onItemSubmit = (data: Item) => {
       onSubmit({
         ...data,
         image: state.image,
-        quantity: safeParseFloat(data.quantity),
-        missingThreshold: safeParseFloat(data.missingThreshold),
         name: data.name.trim(),
         category: capitalize(data.category.toLocaleLowerCase().trim()),
       });
@@ -142,7 +140,11 @@ const ItemForm = observer(
                 backgroundColor: colors.primary,
               },
             ]}
-            onPress={() => camera.setOpen(true)}
+            onPress={() => {
+              posthog.capture("Choose camera", { screen });
+
+              camera.setOpen(true);
+            }}
           >
             <Text style={[styles.buttonText, { color: colors.foreground }]}>
               {translations.capturePicture}
@@ -208,58 +210,7 @@ const ItemForm = observer(
             )}
           />
         )}
-        {!hiddenFields.includes("quantity") && (
-          <Controller
-            control={control}
-            name="quantity"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                containerStyles={styles.containerInput}
-                label={translations.quantity}
-                keyboardType="numeric"
-                bottomSheet
-                style={styles.input}
-                value={value}
-                onChangeText={(value) => {
-                  if (IGNORED_QUANTITY_KEYS.test(value)) return;
-                  onChange(value);
-                }}
-                onBlur={() => {
-                  onChange(
-                    clamp(safeParseFloat(value), 0, MAX_QUANTITY).toString()
-                  );
-                  onBlur();
-                }}
-              />
-            )}
-          />
-        )}
-        {!hiddenFields.includes("missingThreshold") && (
-          <Controller
-            control={control}
-            name="missingThreshold"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                containerStyles={styles.containerInput}
-                bottomSheet
-                label={translations.missingThreshold}
-                style={styles.input}
-                keyboardType="numeric"
-                value={value}
-                onChangeText={(value) => {
-                  if (IGNORED_QUANTITY_KEYS.test(value)) return;
-                  onChange(value);
-                }}
-                onBlur={() => {
-                  onChange(
-                    clamp(safeParseFloat(value), 0, MAX_QUANTITY).toString()
-                  );
-                  onBlur();
-                }}
-              />
-            )}
-          />
-        )}
+
         {!hiddenFields.includes("camera") && (
           <TouchableOpacity
             style={[
@@ -270,6 +221,8 @@ const ItemForm = observer(
               },
             ]}
             onPress={() => {
+              posthog.capture("Opened media select", { screen });
+
               setMediaSelection(true);
             }}
           >
@@ -392,17 +345,10 @@ type Action = {
   payload: string;
 };
 
-function reducer(state: FormItem, action: Action): FormItem {
+function reducer(state: Item, action: Action): Item {
   switch (action.type) {
-    case "updateQuantity":
-      return { ...state, quantity: action.payload };
     case "updateCategory":
       return { ...state, category: action.payload };
-    case "updateMissingThreshold":
-      return {
-        ...state,
-        missingThreshold: action.payload,
-      };
     case "updateName":
       return { ...state, name: action.payload };
     case "updateImage":

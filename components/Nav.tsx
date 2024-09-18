@@ -17,6 +17,8 @@ import { Text } from "@/components/ui/Text";
 import * as Crypto from "expo-crypto";
 import { colors, spacing } from "@/utils/theme";
 import ShareIcon from "./ui/icons/Share";
+import { usePostHog } from "posthog-react-native";
+import { useScreen } from "@/hooks/useScreen";
 
 const INDICATOR_POSITIONS = {
   "/": 0,
@@ -28,6 +30,8 @@ const INDICATOR_POSITIONS = {
 export function Nav() {
   const pathname = usePathname();
   const router = useRouter();
+  const posthog = usePostHog();
+  const screen = useScreen();
 
   const { setContent, setOpen } = usePopup();
   const left = useSharedValue(INDICATOR_POSITIONS[pathname]);
@@ -49,6 +53,8 @@ export function Nav() {
   const onInsertItem = (item: Item) => {
     onInsert(item);
     setOpen(false);
+    posthog.capture("Created item", { screen });
+
     if (showIntro) {
       SetIntro(false);
       router.replace("/");

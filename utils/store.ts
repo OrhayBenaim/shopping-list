@@ -167,7 +167,6 @@ export const GetMissingCategories = () => {
 };
 
 export const onInsert = (item: Item) => {
-  item.missing = item.missingThreshold >= item.quantity;
   item.updatedAt = new Date().getTime();
   state.set((items) => [...items, item]);
   SetIntro(false);
@@ -178,26 +177,8 @@ export const onDelete = (itemId: string) => {
 };
 
 export const onUpdate = (item: Item) => {
-  item.missing = item.missingThreshold >= item.quantity;
   item.updatedAt = new Date().getTime();
   state.set((items) => items.map((i) => (i.id === item.id ? item : i)));
-};
-
-export const IncreaseQuantity = (item: Item) => {
-  if (item.quantity + 1 <= MAX_QUANTITY) {
-    onUpdate({ ...item, quantity: item.quantity + 1 });
-  }
-};
-
-export const DecreaseQuantity = (item: Item) => {
-  if (item.quantity - 1 >= 0) {
-    onUpdate({ ...item, quantity: item.quantity - 1 });
-  }
-};
-
-export const ChangeQuantity = (item: Item, quantity: string) => {
-  const parsedQuantity = clamp(safeParseFloat(quantity), 0, MAX_QUANTITY);
-  onUpdate({ ...item, quantity: parsedQuantity });
 };
 
 export const ItemsByCategories = (items: Item[]) => {
