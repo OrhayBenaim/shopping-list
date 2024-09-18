@@ -3,7 +3,7 @@
     "name": "shopping-list",
     "slug": "shopping-list",
     "scheme": "shopping-list",
-    "version": "2.0.1",
+    "version": "2.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,15 +12,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#0076CE"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ottersproduction.shoppinglist"
     },
     "android": {
-      "versionCode": 21,
+      "versionCode": 22,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0076CE"
@@ -34,10 +32,7 @@
       [
         "expo-asset",
         {
-          "assets": [
-            "./assets/images/intro.png",
-            "./assets/images/share.png"
-          ]
+          "assets": ["./assets/images/intro.png", "./assets/images/share.png"]
         }
       ],
       "expo-font",
