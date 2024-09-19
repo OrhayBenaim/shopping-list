@@ -92,9 +92,9 @@ export default function RootLayout() {
 
   return (
     <PostHogProvider
-      apiKey={process.env.EXPO_PUBLIC_API_KEY}
+      apiKey="phc_WahyjqYe66W8ex4rnDKU6t9gsF42Q4TSTHGYhjCCnql"
       options={{
-        host: process.env.EXPO_PUBLIC_API_URL,
+        host: "https://eu.i.posthog.com",
       }}
     >
       <AutocompleteDropdownContextProvider>
