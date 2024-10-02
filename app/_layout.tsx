@@ -22,7 +22,6 @@ import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-d
 import { PostHogProvider } from "posthog-react-native";
 import { usePostHog } from "posthog-react-native";
 import { settings } from "@/utils/store";
-import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 
 I18nManager.allowRTL(false);
@@ -109,25 +108,15 @@ export default function RootLayout() {
 const RootLayoutNav = observer(() => {
   const posthog = usePostHog();
 
-  const { language, sync, endpoint, showIntro } = settings.get();
+  const { language, sync, endpoint, showIntro, postHogId } = settings.get();
 
   useEffect(() => {
-    (async () => {
-      let id = await SecureStore.getItemAsync("id");
-      if (!id) {
-        id = await Crypto.digestStringAsync(
-          Crypto.CryptoDigestAlgorithm.SHA256,
-          Math.random().toString()
-        );
-        await SecureStore.setItemAsync("id", id);
-      }
-      posthog.identify(id, {
-        language,
-        remote_sync: sync && !!endpoint,
-        intro: showIntro,
-      });
-    })();
-  }, []);
+    posthog.identify(postHogId, {
+      language,
+      remote_sync: sync && !!endpoint,
+      intro: showIntro,
+    });
+  }, [postHogId]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

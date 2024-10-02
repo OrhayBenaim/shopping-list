@@ -1,9 +1,9 @@
 import { observable } from "@legendapp/state";
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 import { persistObservable } from "@legendapp/state/persist";
-import { Item, MAX_QUANTITY } from "@/models/item";
-import { clamp, safeParseFloat } from "./helpers";
+import { Item } from "@/models/item";
 import * as FileSystem from "expo-file-system";
+import * as Crypto from "expo-crypto";
 
 export const state = observable<Item[]>([]);
 
@@ -16,12 +16,14 @@ export const settings = observable<{
   language: Lang;
   isRTL: boolean;
   showIntro: boolean;
+  postHogId: string;
 }>({
   sync: false,
   endpoint: undefined,
   language: "en",
   isRTL: false,
   showIntro: true,
+  postHogId: Crypto.randomUUID(),
 });
 
 export const snapshot = observable<(Item | undefined)[]>([]);
