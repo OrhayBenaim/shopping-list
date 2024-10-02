@@ -8,10 +8,7 @@ import {
   ItemsByCategories,
   onUpdate,
 } from "@/utils/store";
-import type { Item } from "@/models/item";
 import { useEffect, useMemo, useState } from "react";
-import { usePopup } from "@/components/Popup";
-import ItemForm from "@/components/ItemForm";
 import ItemsComponent from "@/components/ItemsComponent";
 import Categories from "@/components/Categories";
 import SearchInput from "@/components/ui/Search";
@@ -21,7 +18,6 @@ import { useScreen } from "@/hooks/useScreen";
 const Missing = observer(() => {
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const { setContent, setOpen } = usePopup();
   const posthog = usePostHog();
   const screen = useScreen();
 
@@ -37,23 +33,6 @@ const Missing = observer(() => {
       a.localeCompare(b)
     );
   }, [itemsByCategories]);
-
-  const onItemPopupSave = (item: Item) => {
-    setOpen(false);
-    onUpdate(item);
-    posthog.capture("Updated item", { screen });
-  };
-
-  const onItemPress = (item: Item) => {
-    setContent(
-      <ItemForm
-        onSubmit={onItemPopupSave}
-        hiddenFields={["category", "missingThreshold", "name", "camera"]}
-        item={item}
-      />,
-      "25%"
-    );
-  };
 
   useEffect(() => {
     posthog.capture("Missing page loaded", { screen });
@@ -74,7 +53,6 @@ const Missing = observer(() => {
         keyExtractor={([category]) => category}
         renderItem={({ item: [category, items] }) => (
           <ItemsComponent
-            onItemPress={onItemPress}
             key={category}
             items={items}
             category={category}

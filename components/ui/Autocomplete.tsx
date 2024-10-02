@@ -90,7 +90,7 @@ export const AutoComplete = observer((props: AutocompleteProps) => {
             flexDirection: settings.get().isRTL ? "row-reverse" : "row",
           },
         ]}
-        emptyResultText={translations.noCategories}
+        EmptyResultComponent={<></>}
         textInputProps={{
           style: {
             textAlign: settings.get().isRTL ? "right" : "left",

@@ -20,7 +20,7 @@ import { usePostHog } from "posthog-react-native";
 interface Props {
   item: Item;
   onToggleMissing?: (item: Item) => void;
-  onItemPress: (item: Item) => void;
+  onItemPress?: (item: Item) => void;
 }
 const ItemComponent = observer(
   ({ item, onItemPress, onToggleMissing }: Props) => {
@@ -59,6 +59,13 @@ const ItemComponent = observer(
       });
     };
 
+    const onPressItem = () => {
+      if (!onItemPress) return;
+      posthog.capture("Item pressed", { screen });
+
+      onItemPress(item);
+    };
+
     const hasControls = useMemo(() => !!onToggleMissing, [onToggleMissing]);
 
     return (
@@ -72,11 +79,8 @@ const ItemComponent = observer(
         key={item.id}
       >
         <TouchableOpacity
-          onPress={() => {
-            posthog.capture("Item pressed", { screen });
-
-            onItemPress(item);
-          }}
+          onPress={onPressItem}
+          disabled={!onItemPress}
           style={[
             styles.editArea,
             {

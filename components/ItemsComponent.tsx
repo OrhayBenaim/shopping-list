@@ -10,7 +10,7 @@ interface Props {
   items: Item[];
   category: string;
   ToggleMissing?: (item: Item) => void;
-  onItemPress: (item: Item) => void;
+  onItemPress?: (item: Item) => void;
 }
 const ItemsComponent = observer(
   ({ category, items, onItemPress, ToggleMissing }: Props) => {
